@@ -41,7 +41,6 @@ import { Route as AdminCustomersIdRouteImport } from './routes/admin/customers/$
 import { Route as AdminDiscountsIndexRouteImport } from './routes/admin/discounts/index'
 import { Route as AdminHomepageIndexRouteImport } from './routes/admin/homepage/index'
 import { Route as AdminInventoryIndexRouteImport } from './routes/admin/inventory/index'
-import { Route as AdminLogsIndexRouteImport } from './routes/admin/logs/index'
 import { Route as AdminMediaIndexRouteImport } from './routes/admin/media/index'
 import { Route as AdminOrdersIndexRouteImport } from './routes/admin/orders/index'
 import { Route as AdminOrdersIdRouteImport } from './routes/admin/orders/$id'
@@ -215,11 +214,6 @@ const AdminInventoryIndexRoute = AdminInventoryIndexRouteImport.update({
   path: '/inventory/',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminLogsIndexRoute = AdminLogsIndexRouteImport.update({
-  id: '/logs/',
-  path: '/logs/',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminMediaIndexRoute = AdminMediaIndexRouteImport.update({
   id: '/media/',
   path: '/media/',
@@ -312,7 +306,6 @@ export interface FileRoutesByFullPath {
   '/admin/discounts/': typeof AdminDiscountsIndexRoute
   '/admin/homepage/': typeof AdminHomepageIndexRoute
   '/admin/inventory/': typeof AdminInventoryIndexRoute
-  '/admin/logs/': typeof AdminLogsIndexRoute
   '/admin/media/': typeof AdminMediaIndexRoute
   '/admin/orders/': typeof AdminOrdersIndexRoute
   '/admin/products/': typeof AdminProductsIndexRoute
@@ -355,7 +348,6 @@ export interface FileRoutesByTo {
   '/admin/discounts': typeof AdminDiscountsIndexRoute
   '/admin/homepage': typeof AdminHomepageIndexRoute
   '/admin/inventory': typeof AdminInventoryIndexRoute
-  '/admin/logs': typeof AdminLogsIndexRoute
   '/admin/media': typeof AdminMediaIndexRoute
   '/admin/orders': typeof AdminOrdersIndexRoute
   '/admin/products': typeof AdminProductsIndexRoute
@@ -402,7 +394,6 @@ export interface FileRoutesById {
   '/admin/discounts/': typeof AdminDiscountsIndexRoute
   '/admin/homepage/': typeof AdminHomepageIndexRoute
   '/admin/inventory/': typeof AdminInventoryIndexRoute
-  '/admin/logs/': typeof AdminLogsIndexRoute
   '/admin/media/': typeof AdminMediaIndexRoute
   '/admin/orders/': typeof AdminOrdersIndexRoute
   '/admin/products/': typeof AdminProductsIndexRoute
@@ -449,7 +440,6 @@ export interface FileRouteTypes {
     | '/admin/discounts/'
     | '/admin/homepage/'
     | '/admin/inventory/'
-    | '/admin/logs/'
     | '/admin/media/'
     | '/admin/orders/'
     | '/admin/products/'
@@ -492,7 +482,6 @@ export interface FileRouteTypes {
     | '/admin/discounts'
     | '/admin/homepage'
     | '/admin/inventory'
-    | '/admin/logs'
     | '/admin/media'
     | '/admin/orders'
     | '/admin/products'
@@ -538,7 +527,6 @@ export interface FileRouteTypes {
     | '/admin/discounts/'
     | '/admin/homepage/'
     | '/admin/inventory/'
-    | '/admin/logs/'
     | '/admin/media/'
     | '/admin/orders/'
     | '/admin/products/'
@@ -782,13 +770,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminInventoryIndexRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/logs/': {
-      id: '/admin/logs/'
-      path: '/logs'
-      fullPath: '/admin/logs/'
-      preLoaderRoute: typeof AdminLogsIndexRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/media/': {
       id: '/admin/media/'
       path: '/media'
@@ -934,7 +915,6 @@ interface AdminRouteChildren {
   AdminDiscountsIndexRoute: typeof AdminDiscountsIndexRoute
   AdminHomepageIndexRoute: typeof AdminHomepageIndexRoute
   AdminInventoryIndexRoute: typeof AdminInventoryIndexRoute
-  AdminLogsIndexRoute: typeof AdminLogsIndexRoute
   AdminMediaIndexRoute: typeof AdminMediaIndexRoute
   AdminOrdersIndexRoute: typeof AdminOrdersIndexRoute
   AdminProductsIndexRoute: typeof AdminProductsIndexRoute
@@ -955,7 +935,6 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminDiscountsIndexRoute: AdminDiscountsIndexRoute,
   AdminHomepageIndexRoute: AdminHomepageIndexRoute,
   AdminInventoryIndexRoute: AdminInventoryIndexRoute,
-  AdminLogsIndexRoute: AdminLogsIndexRoute,
   AdminMediaIndexRoute: AdminMediaIndexRoute,
   AdminOrdersIndexRoute: AdminOrdersIndexRoute,
   AdminProductsIndexRoute: AdminProductsIndexRoute,
