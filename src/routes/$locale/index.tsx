@@ -10,6 +10,8 @@ import { useHref, useT, useLocalized, useDir, useFormatters } from "@/lib/locale
 import type { Category, Product, HomepageSection, HeroSlide } from "@/lib/types";
 import { useStore } from "@/lib/store";
 import { HOME_TESTIMONIALS, HOME_BENEFITS } from "@/lib/content";
+import { SmartImage } from "@/components/common/SmartImage";
+import { useInitialLoadGate } from "@/lib/initial-load";
 
 export const Route = createFileRoute("/$locale/")({
   component: StorefrontHomePage,
@@ -17,6 +19,30 @@ export const Route = createFileRoute("/$locale/")({
 
 const FALLBACK_IMAGE =
   "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=60&w=400&auto=format&fit=crop";
+
+/**
+ * Preload a single image, resolving on load, error, OR a hard timeout — so a
+ * slow/failed external image can never block the reveal of the site.
+ */
+function preloadImage(url: string | undefined, timeoutMs = 4500): Promise<void> {
+  return new Promise((resolve) => {
+    if (!url || typeof window === "undefined") return resolve();
+    const img = new Image();
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timer);
+      resolve();
+    };
+    const timer = window.setTimeout(finish, timeoutMs);
+    img.onload = finish;
+    img.onerror = finish;
+    img.src = url;
+    if (img.complete) finish();
+    if (img.decode) img.decode().then(finish).catch(() => {});
+  });
+}
 
 /**
  * Hero button links are stored with a leading locale segment (e.g. "/ar/collections").
@@ -58,15 +84,16 @@ function HeroSlider({ slides }: { slides: HeroSlide[] }) {
             }`}
           >
             <div className="absolute inset-0 bg-black/40 z-10" />
-            <img
-              src={slide.image || FALLBACK_IMAGE}
+            <SmartImage
+              src={slide.image}
+              fallbackSrc={FALLBACK_IMAGE}
               alt={heading}
+              fill
+              objectFit="cover"
+              priority={idx === 0}
               width={1440}
               height={700}
-              loading={idx === 0 ? "eager" : "lazy"}
-              decoding="async"
-              fetchPriority={idx === 0 ? "high" : "low"}
-              className={`absolute inset-0 w-full h-full object-cover transition-transform duration-[10000ms] ease-linear ${
+              imgClassName={`transition-transform duration-[10000ms] ease-linear ${
                 idx === current ? "scale-105" : "scale-100"
               }`}
             />
@@ -254,14 +281,16 @@ function ProductCard({
         to={href(`/products/${product.slug}`)}
         className={`block relative ${aspectClass} overflow-hidden bg-[#f9f9f9] p-6 shrink-0 flex items-center justify-center`}
       >
-        <img
-          src={product.images[0]?.src || FALLBACK_IMAGE}
+        <SmartImage
+          src={product.images[0]?.src}
+          fallbackSrc={FALLBACK_IMAGE}
           alt={L(product.name)}
+          objectFit={objectFit}
           width={600}
           height={600}
-          loading="lazy"
-          decoding="async"
-          className={`w-full h-full object-${objectFit} group-hover:scale-110 transition-transform duration-700 ease-out mix-blend-multiply`}
+          className="w-full h-full"
+          placeholderClassName="bg-[#f9f9f9]"
+          imgClassName="group-hover:scale-110 transition-transform duration-700 ease-out mix-blend-multiply"
         />
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
       </Link>

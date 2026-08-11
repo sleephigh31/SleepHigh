@@ -628,3 +628,141 @@
     padding: 16px;
   }
 }
+
+/* =============================================================
+   INITIAL LOAD — full-page branded preloader + image system
+   Lightweight, dependency-free. All animations are pure CSS so
+   they run before hydration and are neutralised automatically by
+   the global `prefers-reduced-motion` block above.
+   ============================================================= */
+
+/* Sweep used by the preloader bar and by <SmartImage> skeletons.
+   (Also powers the existing SleepHighLoader `animate-[shimmer]`.) */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes shg-glow {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.12);
+  }
+}
+
+@keyframes shg-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes shg-bar {
+  0% {
+    transform: translateX(-140%);
+  }
+  100% {
+    transform: translateX(340%);
+  }
+}
+
+/* ── Full-page preloader ─────────────────────────────────────── */
+.shg-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000; /* above header (9999) and mobile drawer (100000) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  /* Opaque brand background — fully hides the app behind it. */
+  background:
+    radial-gradient(130% 130% at 50% 0%, #ffffff 0%, var(--background) 58%, #f6efe9 100%);
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity 500ms ease,
+    transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.shg-splash--leaving {
+  opacity: 0;
+  transform: scale(1.05);
+  pointer-events: none;
+}
+
+.shg-splash__glow {
+  animation: shg-glow 2.4s ease-in-out infinite;
+}
+
+.shg-splash__mark {
+  animation: shg-float 3.4s ease-in-out infinite;
+}
+
+.shg-splash__track {
+  position: relative;
+  overflow: hidden;
+  border-radius: 9999px;
+}
+
+.shg-splash__bar {
+  position: absolute;
+  inset-block: 0;
+  inline-size: 42%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, transparent, var(--brand), transparent);
+  animation: shg-bar 1.4s ease-in-out infinite;
+}
+
+/* ── SmartImage skeleton placeholder ─────────────────────────── */
+.shg-skel {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--muted);
+}
+
+.shg-skel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.55),
+    transparent
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+.dark .shg-skel::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+}
+
+/* Image fade-in once decoded — no pop, no layout shift. */
+.shg-img {
+  opacity: 0;
+  transition: opacity 500ms ease;
+}
+
+.shg-img--ready {
+  opacity: 1;
+}

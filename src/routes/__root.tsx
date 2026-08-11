@@ -10,10 +10,16 @@ import {
 import { useEffect, type ReactNode } from "react";
 import { usePWA } from "@/components/common/PWAInstallPrompt";
 import { useLocale, useT } from "@/lib/locale";
+import { InitialLoadProvider } from "@/lib/initial-load";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+
+/** Brand logo used across the storefront header — preloaded so it is ready the
+ *  moment the preloader lifts. */
+const SITE_LOGO_URL =
+  "https://sleephigh-eg.myshopify.com/cdn/shop/files/h_logo_250x.png?v=1697100417";
 
 export function NotFoundComponent() {
   const locale = useLocale();
@@ -115,6 +121,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "manifest", href: "/manifest.json" },
       { rel: "apple-touch-icon", href: "/icons/icon-192.svg" },
+      // Warm up connections to the external image CDNs so critical imagery
+      // (hero, logo, products) starts downloading sooner.
+      { rel: "preconnect", href: "https://sleephigh-eg.myshopify.com", crossOrigin: "anonymous" },
+      { rel: "preconnect", href: "https://lh3.googleusercontent.com", crossOrigin: "anonymous" },
+      { rel: "preconnect", href: "https://images.unsplash.com", crossOrigin: "anonymous" },
+      // Preload the storefront logo so it appears the instant the loader lifts.
+      { rel: "preload", as: "image", href: SITE_LOGO_URL, fetchPriority: "high" },
     ],
   }),
   shellComponent: RootShell,
@@ -143,7 +156,9 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <InitialLoadProvider>
+        <Outlet />
+      </InitialLoadProvider>
       <SpeedInsights />
     </QueryClientProvider>
   );
