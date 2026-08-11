@@ -7,7 +7,7 @@ import {
   getPageSize,
 } from "@/lib/services/firebase/productService";
 import { listCategories } from "@/lib/services/firebase/categoryService";
-import { useHref, useT, useDir } from "@/lib/locale";
+import { useHref, useT, useDir, useLocalized } from "@/lib/locale";
 import { ChevronLeft, ChevronRight, LayoutGrid, SlidersHorizontal } from "lucide-react";
 import type { Category, CategoryHandle, Product, SortKey } from "@/lib/types";
 
@@ -47,6 +47,7 @@ function Pagination({
   totalPages: number;
   onPageChange: (page: number) => void;
 }) {
+  const t = useT();
   const pages = useMemo(() => {
     const result: (number | "...")[] = [];
     if (totalPages <= 1) return result;
@@ -121,6 +122,7 @@ function StorefrontCollectionsIndexPage() {
   const href = useHref();
   const t = useT();
   const dir = useDir();
+  const L = useLocalized();
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -226,7 +228,7 @@ function StorefrontCollectionsIndexPage() {
                     : "bg-surface-secondary text-foreground/70 hover:bg-brand-soft hover:text-brand"
                 }`}
               >
-                {cat.name.ar}
+                {L(cat.name)}
               </button>
             ))}
           </div>

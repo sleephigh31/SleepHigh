@@ -6,7 +6,7 @@ import { listCategories } from "@/lib/services/firebase/categoryService";
 import { getHomepageSections } from "@/lib/services/firebase/homepageService";
 import { submitSiteMessage } from "@/lib/services/firebase/messageService";
 import confetti from "canvas-confetti";
-import { useHref, useT, useLocalized, useDir } from "@/lib/locale";
+import { useHref, useT, useLocalized, useDir, useFormatters } from "@/lib/locale";
 import type { Category, Product, HomepageSection, HeroSlide } from "@/lib/types";
 import { useStore } from "@/lib/store";
 import { HOME_TESTIMONIALS, HOME_BENEFITS } from "@/lib/content";
@@ -30,6 +30,7 @@ function stripLocalePrefix(path: string): string {
 function HeroSlider({ slides }: { slides: HeroSlide[] }) {
   const [current, setCurrent] = useState(0);
   const href = useHref();
+  const t = useT();
   const L = useLocalized();
   const dir = useDir();
 
@@ -112,7 +113,7 @@ function HeroSlider({ slides }: { slides: HeroSlide[] }) {
               className={`transition-all duration-300 rounded-full h-2.5 ${
                 idx === current ? "w-8 bg-white" : "w-2.5 bg-white/50 hover:bg-white/80"
               }`}
-              aria-label={`شريحة ${idx + 1}`}
+              aria-label={t("hero.slide", { index: idx + 1 })}
             />
           ))}
         </div>
@@ -246,6 +247,7 @@ function ProductCard({
 }) {
   const L = useLocalized();
   const t = useT();
+  const { price } = useFormatters();
   return (
     <div className="w-full bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group border border-gray-100 flex flex-col relative h-full">
       <Link
@@ -283,7 +285,7 @@ function ProductCard({
           >
             <ShoppingBag className="h-5 w-5" />
           </button>
-          <p className="text-[#b90015] font-black text-lg">{product.price.toLocaleString()} {t("common.currency")}</p>
+          <p className="text-[#b90015] font-black text-lg">{price(product.price)}</p>
         </div>
       </div>
     </div>
@@ -440,6 +442,7 @@ function StorefrontHomePage() {
   const href = useHref();
   const t = useT();
   const L = useLocalized();
+  const dir = useDir();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [homepageData, setHomepageData] = useState<HomepageSection[]>([]);
@@ -487,7 +490,7 @@ function StorefrontHomePage() {
   return (
     <>
       <div
-        dir="rtl"
+        dir={dir}
         className="min-h-screen bg-[#fcf9f8] text-[#1c1b1b] font-sans selection:bg-[#ffdad6]"
       >
         {/* ── HERO ─────────────────────────────────────────────── */}

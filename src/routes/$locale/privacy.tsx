@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useHref, useT } from "@/lib/locale";
+import { useHref, useT, useDir } from "@/lib/locale";
 import { Shield, Home, ChevronDown } from "lucide-react";
 
 export const Route = createFileRoute("/$locale/privacy")({
@@ -9,9 +9,10 @@ export const Route = createFileRoute("/$locale/privacy")({
 function PrivacyPolicyPage() {
   const href = useHref();
   const t = useT();
+  const dir = useDir();
 
   return (
-    <div dir="rtl" className="min-h-screen bg-background text-foreground">
+    <div dir={dir} className="min-h-screen bg-background text-foreground">
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-bl from-[#1c1b1b] via-[#2a1f1e] to-[#1c1b1b]">
         <div className="absolute top-0 left-0 w-80 h-80 bg-brand/10 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2" />
@@ -32,9 +33,9 @@ function PrivacyPolicyPage() {
             <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
               <Shield className="h-6 w-6 text-white" />
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-white">سياسة الخصوصية</h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-white">{t("privacy.title")}</h1>
           </div>
-          <p className="text-white/60 text-sm">آخر تحديث: أغسطس 2026</p>
+          <p className="text-white/60 text-sm">{t("policy.lastUpdated")}</p>
         </div>
       </section>
 
@@ -46,7 +47,7 @@ function PrivacyPolicyPage() {
               <span className="w-8 h-8 rounded-lg bg-brand/10 text-brand text-sm font-black flex items-center justify-center">
                 1
               </span>
-              مقدمة
+              {t("privacy.s1Title")}
             </h2>
             <p className="text-muted-foreground leading-relaxed text-sm">
              {t("privacy.s1Text")}
@@ -58,7 +59,7 @@ function PrivacyPolicyPage() {
               <span className="w-8 h-8 rounded-lg bg-brand/10 text-brand text-sm font-black flex items-center justify-center">
                 2
               </span>
-              المعلومات التي نجمعها
+              {t("privacy.s2Title")}
             </h2>
             <ul className="space-y-2 text-muted-foreground text-sm">
               <li className="flex items-start gap-2">
@@ -85,7 +86,7 @@ function PrivacyPolicyPage() {
               <span className="w-8 h-8 rounded-lg bg-brand/10 text-brand text-sm font-black flex items-center justify-center">
                 3
               </span>
-              كيف نستخدم معلوماتك
+              {t("privacy.s3Title")}
             </h2>
             <ul className="space-y-2 text-muted-foreground text-sm">
               <li className="flex items-start gap-2">
@@ -112,7 +113,7 @@ function PrivacyPolicyPage() {
               <span className="w-8 h-8 rounded-lg bg-brand/10 text-brand text-sm font-black flex items-center justify-center">
                 4
               </span>
-              حماية المعلومات
+              {t("privacy.s4Title")}
             </h2>
             <p className="text-muted-foreground leading-relaxed text-sm">
              {t("privacy.s4Text")}
@@ -124,7 +125,7 @@ function PrivacyPolicyPage() {
               <span className="w-8 h-8 rounded-lg bg-brand/10 text-brand text-sm font-black flex items-center justify-center">
                 5
               </span>
-              حقوقك
+              {t("privacy.s5Title")}
             </h2>
             <ul className="space-y-2 text-muted-foreground text-sm">
               <li className="flex items-start gap-2">
@@ -147,7 +148,7 @@ function PrivacyPolicyPage() {
               <span className="w-8 h-8 rounded-lg bg-brand/10 text-brand text-sm font-black flex items-center justify-center">
                 6
               </span>
-              تواصل معنا
+              {t("policy.contactUs")}
             </h2>
             <p className="text-muted-foreground leading-relaxed text-sm">
                {t("privacy.s6Text")}{" "}

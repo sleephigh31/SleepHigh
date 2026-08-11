@@ -15,7 +15,7 @@ function CartPage() {
   const dir = useDir();
   const href = useHref();
   const t = useT();
-  const { price } = useFormatters();
+  const { price, variantOptions } = useFormatters();
 
   return (
     <div className={cn("container-page py-12 space-y-8", dir === "rtl" ? "dir-rtl" : "dir-ltr")}>
@@ -73,12 +73,10 @@ function CartPage() {
                           {L(line.product.name)}
                         </Link>
                         <p className="text-xs text-muted-foreground">
-                          {Object.entries(line.variant.options)
-                            .map(([k, v]) => `${k}: ${v}`)
-                            .join(" | ")}
+                          {variantOptions(line.variant.options, line.product)}
                         </p>
                         <div className="text-sm font-bold text-foreground mt-2 sm:hidden">
-                          {line.unitPrice.toLocaleString("ar-EG")} ج.م
+                          {price(line.unitPrice)}
                         </div>
                       </div>
                     </div>
@@ -142,7 +140,7 @@ function CartPage() {
               </div>
 
               <div className="border-t border-border pt-4 flex justify-between items-end">
-                 <span className="font-bold">الإجمالي</span>
+                 <span className="font-bold">{t("cart.total")}</span>
                  <span className="text-2xl font-black text-brand">
                    {price(total)}
                  </span>

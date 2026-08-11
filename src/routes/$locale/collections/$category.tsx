@@ -47,6 +47,7 @@ function Pagination({
   totalPages: number;
   onPageChange: (page: number) => void;
 }) {
+  const t = useT();
   const pages = useMemo(() => {
     const result: (number | "...")[] = [];
     if (totalPages <= 1) return result;
@@ -179,7 +180,7 @@ function StorefrontCategoryCollectionPage() {
         {/* Background Image */}
         <img
           src={category?.image || FALLBACK_IMAGE}
-          alt={category?.name.ar || categoryHandle}
+          alt={L(category?.name) || categoryHandle}
           className="absolute inset-0 w-full h-full object-cover"
           loading="eager"
           decoding="async"
@@ -207,11 +208,11 @@ function StorefrontCategoryCollectionPage() {
           </nav>
 
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 leading-tight">
-            {category?.name.ar || categoryHandle}
+            {L(category?.name) || categoryHandle}
           </h1>
-          {category?.description.ar && (
+          {L(category?.description) && (
             <p className="text-white/70 text-sm md:text-base max-w-2xl leading-relaxed">
-              {category.description.ar}
+              {L(category?.description)}
             </p>
           )}
         </div>

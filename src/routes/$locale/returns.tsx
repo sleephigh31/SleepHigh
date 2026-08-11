@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useHref, useT } from "@/lib/locale";
+import { useHref, useT, useDir } from "@/lib/locale";
 import { RotateCcw, Home, ChevronDown } from "lucide-react";
 
 export const Route = createFileRoute("/$locale/returns")({
@@ -9,9 +9,10 @@ export const Route = createFileRoute("/$locale/returns")({
 function ReturnPolicyPage() {
   const href = useHref();
   const t = useT();
+  const dir = useDir();
 
   return (
-    <div dir="rtl" className="min-h-screen bg-background text-foreground">
+    <div dir={dir} className="min-h-screen bg-background text-foreground">
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-bl from-[#1c1b1b] via-[#2a1f1e] to-[#1c1b1b]">
         <div className="absolute top-0 left-0 w-80 h-80 bg-brand/10 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2" />
@@ -32,9 +33,9 @@ function ReturnPolicyPage() {
             <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
               <RotateCcw className="h-6 w-6 text-white" />
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-white">سياسة الإرجاع والاستبدال</h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-white">{t("returns.title")}</h1>
           </div>
-          <p className="text-white/60 text-sm">آخر تحديث: أغسطس 2026</p>
+          <p className="text-white/60 text-sm">{t("policy.lastUpdated")}</p>
         </div>
       </section>
 
@@ -54,14 +55,15 @@ function ReturnPolicyPage() {
               <span className="w-8 h-8 rounded-lg bg-brand/10 text-brand text-sm font-black flex items-center justify-center">
                 1
               </span>
-              شروط الإرجاع
+              {t("returns.s1Title")}
             </h2>
             <ul className="space-y-2 text-muted-foreground text-sm">
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
                 <span>
-                   يمكنك إرجاع المنتج خلال <strong className="text-foreground">{t("returns.s1Item1Days")}</strong> من
-                   تاريخ الاستلام.
+                   {t("returns.s1Item1Start")}{" "}
+                   <strong className="text-foreground">{t("returns.s1Item1Days")}</strong>{" "}
+                   {t("returns.s1Item1End")}
                 </span>
               </li>
               <li className="flex items-start gap-2">
@@ -84,7 +86,7 @@ function ReturnPolicyPage() {
               <span className="w-8 h-8 rounded-lg bg-brand/10 text-brand text-sm font-black flex items-center justify-center">
                 2
               </span>
-              شروط الاستبدال
+              {t("returns.s2Title")}
             </h2>
             <ul className="space-y-2 text-muted-foreground text-sm">
               <li className="flex items-start gap-2">
@@ -94,8 +96,9 @@ function ReturnPolicyPage() {
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
                 <span>
-                   يتم الاستبدال خلال <strong className="text-foreground">{t("returns.s2Item2End")}</strong> من تاريخ
-                   الاستلام.
+                   {t("returns.s2Item2Start")}{" "}
+                   <strong className="text-foreground">{t("returns.s1Item1Days")}</strong>{" "}
+                   {t("returns.s2Item2End")}
                 </span>
               </li>
               <li className="flex items-start gap-2">
@@ -110,7 +113,7 @@ function ReturnPolicyPage() {
               <span className="w-8 h-8 rounded-lg bg-brand/10 text-brand text-sm font-black flex items-center justify-center">
                 3
               </span>
-              حالات عدم قبول الإرجاع
+              {t("returns.s3Title")}
             </h2>
             <ul className="space-y-2 text-muted-foreground text-sm">
               <li className="flex items-start gap-2">
@@ -133,7 +136,7 @@ function ReturnPolicyPage() {
               <span className="w-8 h-8 rounded-lg bg-brand/10 text-brand text-sm font-black flex items-center justify-center">
                 4
               </span>
-              إجراءات الإرجاع
+              {t("returns.s4Title")}
             </h2>
             <div className="grid gap-4 sm:grid-cols-3">
               <div className="bg-surface-secondary rounded-2xl p-5 text-center">
@@ -171,12 +174,11 @@ function ReturnPolicyPage() {
               <span className="w-8 h-8 rounded-lg bg-brand/10 text-brand text-sm font-black flex items-center justify-center">
                 5
               </span>
-              الضمان
+              {t("returns.s5Title")}
             </h2>
             <p className="text-muted-foreground leading-relaxed text-sm">
-               جميع مراتب سليب هاي مشمولة بضمان يصل إلى{" "}
+               {t("returns.s5TextStart")}{" "}
                <strong className="text-foreground">{t("returns.s5Years")}</strong>{" "}
-               {t("returns.s5TextStart")}
                {t("returns.s5TextEnd")}
             </p>
           </section>
@@ -186,7 +188,7 @@ function ReturnPolicyPage() {
               <span className="w-8 h-8 rounded-lg bg-brand/10 text-brand text-sm font-black flex items-center justify-center">
                 6
               </span>
-              تواصل معنا
+              {t("policy.contactUs")}
             </h2>
             <p className="text-muted-foreground leading-relaxed text-sm">
                {t("returns.s6Text")}{" "}

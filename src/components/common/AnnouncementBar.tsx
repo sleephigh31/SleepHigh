@@ -1,30 +1,36 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { getHomepageSections } from "@/lib/services/firebase/homepageService";
-import { useT } from "@/lib/locale";
+import { useT, useDir, useLocalizedField } from "@/lib/locale";
 
 export function AnnouncementBar() {
   const [visible, setVisible] = useState(true);
-  const [text, setText] = useState("");
+  const [content, setContent] = useState<Record<string, unknown> | null>(null);
   const t = useT();
+  const dir = useDir();
+  const LF = useLocalizedField();
 
   useEffect(() => {
     getHomepageSections().then((sections) => {
       const barSection = sections.find((s) => s.id === "announcement_bar" && s.active);
       if (barSection) {
-        const content = barSection.content as Record<string, string> | undefined;
-        const raw = content?.["textAr"] || content?.["textEn"] || "";
-        setText(raw);
+        setContent(barSection.content as Record<string, unknown>);
       } else {
         setVisible(false);
       }
     });
   }, []);
 
+  // Locale-aware text: falls back to the other locale when one side is empty.
+  const text = LF(content, "text");
+
   if (!visible) return null;
 
   return (
-    <div className="bg-[#FFC700] text-black py-2.5 px-4 text-xs md:text-sm font-bold tracking-wide dir-rtl shadow-xs transition-all relative">
+    <div
+      dir={dir}
+      className="bg-[#FFC700] text-black py-2.5 px-4 text-xs md:text-sm font-bold tracking-wide shadow-xs transition-all relative"
+    >
       <div className="container-page flex items-center justify-center relative">
         <button
           onClick={() => setVisible(false)}

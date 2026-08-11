@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useDir, useLocale, useT, useHref } from "@/lib/locale";
+import { useDir, useT, useHref } from "@/lib/locale";
+import { t as translate, isLocale, DEFAULT_LOCALE } from "@/lib/i18n";
 import { searchProducts } from "@/lib/services/firebase/productService";
 import { ProductGrid } from "@/components/shop/ProductGrid";
 import { ProductCardSkeleton } from "@/components/common/Skeletons";
@@ -16,13 +17,17 @@ const searchSchema = z.object({
 export const Route = createFileRoute("/$locale/search")({
   head: (ctx: any) => {
     const q = ctx?.search?.q;
+    const locale = isLocale(ctx?.params?.locale) ? ctx.params.locale : DEFAULT_LOCALE;
     return {
       meta: [
-        { title: q ? `البحث عن "${q}" | سليب هاي مصر` : "ابحث عن المراتب والوسائد | سليب هاي مصر" },
+        {
+          title: q
+            ? translate(locale, "search.metaTitleQuery", { query: q })
+            : translate(locale, "search.metaTitle"),
+        },
         {
           name: "description",
-          content:
-            "ابحث في تشكيلة سليب هاي الشاملة للمراتب الطبية والوسائد ومستلزمات النوم الفاخرة.",
+          content: translate(locale, "search.metaDescription"),
         },
       ],
     };
@@ -34,7 +39,6 @@ export const Route = createFileRoute("/$locale/search")({
 function SearchPage() {
   const { q = "" } = Route.useSearch();
   const dir = useDir();
-  const locale = useLocale();
   const t = useT();
   const href = useHref();
   const navigate = useNavigate();
@@ -42,7 +46,7 @@ function SearchPage() {
   const [inputVal, setInputVal] = useState(q);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [errored, setErrored] = useState(false);
 
   useEffect(() => {
     setInputVal(q);
@@ -56,23 +60,19 @@ function SearchPage() {
         return;
       }
       setLoading(true);
-      setError(null);
+      setErrored(false);
       try {
         const results = await searchProducts(q.trim());
         setProducts(results);
       } catch (err) {
         console.error("Search error:", err);
-        setError(
-          locale === "ar"
-            ? "حدث خطأ أثناء البحث، حاول مرة أخرى."
-            : "An error occurred while searching. Please try again.",
-        );
+        setErrored(true);
       } finally {
         setLoading(false);
       }
     }
     performSearch();
-  }, [q, locale]);
+  }, [q]);
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,10 +86,12 @@ function SearchPage() {
     navigate({ to: href("/search"), search: { q: "" } });
   };
 
-  const popularSearches =
-    locale === "ar"
-      ? ["مرتبة طبية", "وسادة ريش", "تطرية مموري فوم", "واقي مرتبة"]
-      : ["Medical mattress", "Feather pillow", "Memory foam topper", "Mattress protector"];
+  const popularSearches = [
+    t("search.popular1"),
+    t("search.popular2"),
+    t("search.popular3"),
+    t("search.popular4"),
+  ];
 
   return (
     <div
@@ -105,12 +107,10 @@ function SearchPage() {
           <span>{t("search.title")}</span>
         </div>
         <h1 className="text-2xl sm:text-4xl font-black text-gray-900 tracking-tight">
-          {locale === "ar" ? "ابحث في منتجات سليب هاي" : "Search SleepHigh Products"}
+          {t("search.heading")}
         </h1>
         <p className="text-xs sm:text-sm text-gray-500 font-medium">
-          {locale === "ar"
-            ? "اعثر على المراتب الطبية والوسائد ومستلزمات الراحة التي تناسب نومك."
-            : "Find the medical mattresses, pillows, and bedding essentials tailored for your sleep."}
+          {t("search.subheading")}
         </p>
       </div>
 
@@ -136,7 +136,7 @@ function SearchPage() {
               type="button"
               onClick={handleClear}
               className="absolute ltr:right-24 rtl:left-24 p-1 text-gray-400 hover:text-gray-600 transition-colors"
-              title={locale === "ar" ? "مسح النص" : "Clear input"}
+              title={t("search.clearInput")}
             >
               <X className="h-5 w-5" />
             </button>
@@ -181,9 +181,9 @@ function SearchPage() {
               ))}
             </div>
           </div>
-        ) : error ? (
+        ) : errored ? (
           <div className="p-6 bg-red-50 border border-red-200 rounded-2xl text-center text-red-700 text-sm font-bold max-w-lg mx-auto">
-            {error}
+            {t("search.failed")}
           </div>
         ) : q && products.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center space-y-4 max-w-md mx-auto bg-gray-50/60 rounded-3xl border border-gray-100 p-8 shadow-xs">
@@ -211,9 +211,7 @@ function SearchPage() {
                 {t("search.resultsFor")} <span className="text-[#C8102E]">"{q}"</span>
               </h2>
               <span className="text-xs font-bold text-gray-500 bg-gray-100 px-3 py-1 rounded-full border border-gray-200">
-                {locale === "ar"
-                  ? `تم العثور على ${products.length} منتج`
-                  : `Found ${products.length} products`}
+                {t("search.found", { count: products.length })}
               </span>
             </div>
             <ProductGrid products={products} />
