@@ -12,6 +12,9 @@ import {
   onAuthStateChanged as firebaseOnAuthStateChanged,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
+  signInWithCredential,
+  getRedirectResult,
   type User as FirebaseUser,
 } from "firebase/auth";
 import { doc, setDoc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
@@ -105,47 +108,90 @@ export async function signInCustomer(
   }
 }
 
-/** Sign in or sign up with Google account. */
+/**
+ * Ensure the Firestore user document exists for a Google account and return the
+ * resolved app User. Shared by every Google flow (One Tap credential, popup,
+ * redirect) so account creation/linking behaves identically regardless of path.
+ * Google accounts are keyed by the stable Firebase UID (derived from Google's
+ * `sub`), so an existing user is re-authenticated rather than duplicated.
+ */
+async function finalizeGoogleUser(fbUser: FirebaseUser): Promise<User> {
+  const userRef = doc(db, "users", fbUser.uid);
+  const userSnap = await getDoc(userRef);
+
+  if (!userSnap.exists()) {
+    await setDoc(userRef, {
+      uid: fbUser.uid,
+      email: fbUser.email ?? "",
+      displayName: fbUser.displayName ?? "",
+      photoURL: fbUser.photoURL ?? "",
+      role: "customer",
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+  } else if (fbUser.photoURL || fbUser.displayName) {
+    await updateDoc(userRef, {
+      ...(fbUser.displayName ? { displayName: fbUser.displayName } : {}),
+      ...(fbUser.photoURL ? { photoURL: fbUser.photoURL } : {}),
+      updatedAt: serverTimestamp(),
+    });
+  }
+
+  const role = await getUserRole(fbUser.uid);
+  const userDoc = await getUserDoc(fbUser.uid);
+  return {
+    ...firebaseUserToUser(fbUser, role),
+    phone: userDoc?.phone,
+    defaultAddress: userDoc?.defaultAddress,
+  };
+}
+
+/**
+ * Primary Google flow. Exchanges a Google ID token (from GIS One Tap or the
+ * official Google button) for a Firebase session. Firebase verifies the token
+ * signature, audience and expiry server-side — the frontend never trusts the
+ * raw Google profile. Works on all browsers (no popup, no cross-domain cookie).
+ */
+export async function signInWithGoogleCredential(
+  idToken: string,
+): Promise<{ ok: true; user: User } | { ok: false; error: string }> {
+  try {
+    const credential = GoogleAuthProvider.credential(idToken);
+    const cred = await signInWithCredential(auth, credential);
+    return { ok: true, user: await finalizeGoogleUser(cred.user) };
+  } catch (err: unknown) {
+    console.error("[authService] signInWithGoogleCredential error:", err);
+    return { ok: false, error: "unknown" };
+  }
+}
+
+function isMobileBrowser(): boolean {
+  return (
+    typeof navigator !== "undefined" &&
+    /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent)
+  );
+}
+
+/**
+ * Fallback Google flow used only when GIS is unavailable (script blocked / no
+ * client ID). Popups are unreliable on mobile, so mobile uses the redirect flow
+ * (completed by `completeGoogleRedirect` on the next load); desktop uses popup.
+ */
 export async function signInWithGoogle(): Promise<
   { ok: true; user: User } | { ok: false; error: string }
 > {
   try {
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: "select_account" });
-    const cred = await signInWithPopup(auth, provider);
 
-    const userRef = doc(db, "users", cred.user.uid);
-    const userSnap = await getDoc(userRef);
-
-    if (!userSnap.exists()) {
-      await setDoc(userRef, {
-        uid: cred.user.uid,
-        email: cred.user.email ?? "",
-        displayName: cred.user.displayName ?? "",
-        photoURL: cred.user.photoURL ?? "",
-        role: "customer",
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      });
-    } else if (cred.user.photoURL || cred.user.displayName) {
-      await updateDoc(userRef, {
-        ...(cred.user.displayName ? { displayName: cred.user.displayName } : {}),
-        ...(cred.user.photoURL ? { photoURL: cred.user.photoURL } : {}),
-        updatedAt: serverTimestamp(),
-      });
+    if (isMobileBrowser()) {
+      await signInWithRedirect(auth, provider);
+      // The browser navigates away; result is handled by completeGoogleRedirect.
+      return { ok: false, error: "redirecting" };
     }
 
-    const role = await getUserRole(cred.user.uid);
-    const userDoc = await getUserDoc(cred.user.uid);
-
-    return {
-      ok: true,
-      user: {
-        ...firebaseUserToUser(cred.user, role),
-        phone: userDoc?.phone,
-        defaultAddress: userDoc?.defaultAddress,
-      },
-    };
+    const cred = await signInWithPopup(auth, provider);
+    return { ok: true, user: await finalizeGoogleUser(cred.user) };
   } catch (err: unknown) {
     const code = (err as { code?: string }).code ?? "";
     if (code === "auth/popup-closed-by-user") {
@@ -155,10 +201,34 @@ export async function signInWithGoogle(): Promise<
       return { ok: false, error: "cancelled" };
     }
     if (code === "auth/popup-blocked") {
-      return { ok: false, error: "popup_blocked" };
+      // Popup blocked (common on mobile) — fall back to a full-page redirect.
+      try {
+        const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: "select_account" });
+        await signInWithRedirect(auth, provider);
+        return { ok: false, error: "redirecting" };
+      } catch {
+        return { ok: false, error: "popup_blocked" };
+      }
     }
     console.error("[authService] signInWithGoogle error:", err);
     return { ok: false, error: "unknown" };
+  }
+}
+
+/**
+ * Complete a pending Google redirect sign-in. Call once on app start. Returns
+ * the signed-in User (creating the Firestore doc if new), or null when there is
+ * no pending redirect.
+ */
+export async function completeGoogleRedirect(): Promise<User | null> {
+  try {
+    const cred = await getRedirectResult(auth);
+    if (!cred?.user) return null;
+    return await finalizeGoogleUser(cred.user);
+  } catch (err) {
+    console.error("[authService] completeGoogleRedirect error:", err);
+    return null;
   }
 }
 

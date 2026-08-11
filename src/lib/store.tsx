@@ -15,6 +15,8 @@ import {
   signInCustomer,
   registerCustomer,
   signInWithGoogle,
+  signInWithGoogleCredential,
+  completeGoogleRedirect,
   signOut as firebaseSignOut,
   onAuthStateChanged,
   updateUserProfile,
@@ -73,6 +75,7 @@ interface StoreValue {
   user: User | null;
   login: (email: string, password: string) => Promise<{ ok: boolean; error?: string }>;
   loginWithGoogle: () => Promise<{ ok: boolean; error?: string }>;
+  loginWithGoogleCredential: (idToken: string) => Promise<{ ok: boolean; error?: string }>;
   register: (input: {
     name: string;
     email: string;
@@ -111,6 +114,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   // Initialize Auth state & Sync Cart/Wishlist/Orders
   useEffect(() => {
+    // Complete any pending Google redirect sign-in (mobile fallback flow).
+    // Creates the Firestore user doc if new; onAuthStateChanged then fires.
+    completeGoogleRedirect().catch(() => {});
+
     const unsub = onAuthStateChanged(async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
@@ -320,6 +327,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     return { ok: false, error: res.error };
   }, []);
 
+  const loginWithGoogleCredential = useCallback(async (idToken: string) => {
+    const res = await signInWithGoogleCredential(idToken);
+    if (res.ok) {
+      setUser(res.user);
+      return { ok: true };
+    }
+    return { ok: false, error: res.error };
+  }, []);
+
   const register = useCallback(
     async (input: { name: string; email: string; phone: string; password: string }) => {
       const res = await registerCustomer(input);
@@ -407,6 +423,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     user,
     login,
     loginWithGoogle,
+    loginWithGoogleCredential,
     register,
     logout,
     updateProfile,
