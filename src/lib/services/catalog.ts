@@ -35,7 +35,20 @@ export function getProductById(id: string) {
 }
 
 export function getVariant(product: Product, variantId: string) {
-  return product.variants.find((v) => v.id === variantId);
+  const variant = product.variants.find((v) => v.id === variantId);
+  if (variant) return variant;
+  if (product.variants.length === 0 && variantId === product.id) {
+    return {
+      id: product.id,
+      sku: product.sku,
+      options: {},
+      price: product.price,
+      compareAtPrice: product.compareAtPrice,
+      stock: product.stock,
+      available: product.stock > 0 && product.active !== false,
+    } as ProductVariant;
+  }
+  return undefined;
 }
 
 export function featuredProducts(limit = 8) {
@@ -114,7 +127,13 @@ export function applyFilters(items: Product[], filters: ProductFilters) {
     if (filters.minPrice !== undefined && max < filters.minPrice) return false;
     if (filters.maxPrice !== undefined && min > filters.maxPrice) return false;
     if (filters.firmness.length && !filters.firmness.includes(product.firmness)) return false;
-    if (filters.inStockOnly && !product.variants.some((v) => v.available)) return false;
+    if (
+      filters.inStockOnly &&
+      !(product.variants.length > 0
+        ? product.variants.some((v) => v.available)
+        : product.stock > 0 && product.active !== false)
+    )
+      return false;
     if (filters.sizes.length) {
       const productSizes = new Set(
         product.variants.flatMap((v) => [v.options["width"], v.options["size"]].filter(Boolean)),

@@ -25,15 +25,28 @@ export function ProductCard({
   const { min, hasRange } = priceRange(product);
   const primary = product.images[0];
   const hover = product.images[1] ?? primary;
-  const inStock = product.variants.some((v) => v.available);
+  const inStock =
+    product.variants.length > 0
+      ? product.variants.some((v) => v.available)
+      : product.stock > 0 && product.active !== false;
 
   const quickAdd = () => {
     if (!user) {
       requestLogin();
       return;
     }
-    const selection = defaultSelection(product);
-    const variant = findVariantByOptions(product, selection) ?? product.variants[0];
+    let variant = findVariantByOptions(product, defaultSelection(product)) ?? product.variants[0];
+    if (!variant && product.variants.length === 0) {
+      variant = {
+        id: product.id,
+        sku: product.sku,
+        options: {},
+        price: product.price,
+        compareAtPrice: product.compareAtPrice,
+        stock: product.stock,
+        available: product.stock > 0 && product.active !== false,
+      } as ProductVariant;
+    }
     if (!variant) return;
     addToCart(product.id, variant.id, 1);
     toast.success(t("product.addedToCart"));

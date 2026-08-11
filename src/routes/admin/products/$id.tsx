@@ -121,7 +121,7 @@ function AdminEditProductPage() {
         isPrimary: img.isPrimary,
       })),
       variants: values.variants,
-      options: generateOptionsFromVariants(values.variants),
+      options: values.variants.length > 0 ? generateOptionsFromVariants(values.variants) : [],
       trust: values.trust,
       viewerCount: values.viewerCount,
     };

@@ -516,8 +516,10 @@ export function ProductForm({ initialValues, isEditing = false, onSubmit }: Prod
             <ImageUploader images={images} onChange={setImages} />
           </div>
 
-          {/* Product Variants */}
-          <div className="rounded-2xl border border-border bg-card p-6 shadow-xs">
+          <div className="rounded-2xl border border-border bg-card p-6 shadow-xs space-y-4">
+            <h3 className="text-sm font-bold text-foreground border-b border-border pb-2">
+              متغيرات المنتج
+            </h3>
             <VariantEditor
               variants={variants}
               basePrice={price}

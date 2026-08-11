@@ -145,7 +145,12 @@ function ProductDetailsPage() {
     );
   }
 
-  const isAvailable = variant ? variant.available && variant.stock > 0 : false;
+  const isAvailable =
+    product.variants.length > 0
+      ? variant
+        ? variant.available && variant.stock > 0
+        : false
+      : product.stock > 0 && product.active !== false;
   const price = variant?.price ?? product.price;
   const compareAt = variant?.compareAtPrice ?? product.compareAtPrice;
   const hasMultipleImages = product.images.length > 1;
@@ -197,8 +202,20 @@ function ProductDetailsPage() {
       requestLogin();
       return;
     }
-    if (!variant || !isAvailable) return;
-    addToCart(product.id, variant.id, quantity);
+    let targetVariant = variant;
+    if (!targetVariant && product.variants.length === 0) {
+      targetVariant = {
+        id: product.id,
+        sku: product.sku,
+        options: {},
+        price: product.price,
+        compareAtPrice: product.compareAtPrice,
+        stock: product.stock,
+        available: product.stock > 0 && product.active !== false,
+      } as typeof variant;
+    }
+    if (!targetVariant || !isAvailable) return;
+    addToCart(product.id, targetVariant.id, quantity);
     setCartOpen(true);
   };
 
@@ -442,11 +459,14 @@ function ProductDetailsPage() {
                 <span>اشترِ الآن</span>
               </button>
             </div>
-            {variant && variant.stock <= (product.lowStockThreshold || 5) && variant.stock > 0 && (
-              <p className="text-sm text-warning font-semibold">
-                تبقى {variant.stock} فقط في المخزون!
-              </p>
-            )}
+            {product.variants.length > 0 &&
+              variant &&
+              variant.stock <= (product.lowStockThreshold || 5) &&
+              variant.stock > 0 && (
+                <p className="text-sm text-warning font-semibold">
+                  تبقى {variant.stock} فقط في المخزون!
+                </p>
+              )}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t border-border">

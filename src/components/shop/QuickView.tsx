@@ -35,7 +35,10 @@ export function QuickView({
   }, [open, product]);
 
   const variant = findVariantByOptions(product, selection);
-  const available = Boolean(variant?.available);
+  const available =
+    product.variants.length > 0
+      ? Boolean(variant?.available)
+      : product.stock > 0 && product.active !== false;
   const image = product.images[0];
 
   const add = () => {
@@ -44,8 +47,20 @@ export function QuickView({
       requestLogin();
       return;
     }
-    if (!variant) return;
-    addToCart(product.id, variant.id, quantity);
+    let targetVariant = variant;
+    if (!targetVariant && product.variants.length === 0) {
+      targetVariant = {
+        id: product.id,
+        sku: product.sku,
+        options: {},
+        price: product.price,
+        compareAtPrice: product.compareAtPrice,
+        stock: product.stock,
+        available: product.stock > 0 && product.active !== false,
+      } as ProductVariant;
+    }
+    if (!targetVariant) return;
+    addToCart(product.id, targetVariant.id, quantity);
     onOpenChange(false);
     toast.success(t("product.addedToCart"));
     setCartOpen(true);

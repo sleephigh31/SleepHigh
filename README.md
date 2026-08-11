@@ -71,29 +71,29 @@ The platform is **fully bilingual** (Arabic 🇪🇬 default with native RTL lay
 
 ### 🛍️ Customer Storefront
 
-| Feature | Description |
-|---|---|
-| 🧵 **Dynamic Product Catalog** | Browse Mattresses, Pillows, and Toppers with rich filtering |
-| 📐 **Advanced Product Pages** | Variant selection (size, height, material) with dynamic real-time pricing |
-| 🛒 **Smart Cart & Checkout** | Streamlined checkout flow with Cash on Delivery & Online Payment placeholders |
-| ❤️ **Wishlist** | Save favorite products, synced locally and with Firebase for logged-in users |
-| 👤 **User Accounts** | Address book, order history, and profile management |
-| 🔎 **Search & Filtering** | Full site search, category filters, and multi-criteria sorting |
-| ✉️ **Contact & Newsletter** | Contact forms and newsletter subscription capture |
-| 🌐 **Bilingual UX** | Seamless AR (RTL) / EN (LTR) language switching, persisted per user |
-| 📱 **PWA Experience** | Installable app with offline caching and native-like install prompts |
+| Feature                        | Description                                                                   |
+| ------------------------------ | ----------------------------------------------------------------------------- |
+| 🧵 **Dynamic Product Catalog** | Browse Mattresses, Pillows, and Toppers with rich filtering                   |
+| 📐 **Advanced Product Pages**  | Variant selection (size, height, material) with dynamic real-time pricing     |
+| 🛒 **Smart Cart & Checkout**   | Streamlined checkout flow with Cash on Delivery & Online Payment placeholders |
+| ❤️ **Wishlist**                | Save favorite products, synced locally and with Firebase for logged-in users  |
+| 👤 **User Accounts**           | Address book, order history, and profile management                           |
+| 🔎 **Search & Filtering**      | Full site search, category filters, and multi-criteria sorting                |
+| ✉️ **Contact & Newsletter**    | Contact forms and newsletter subscription capture                             |
+| 🌐 **Bilingual UX**            | Seamless AR (RTL) / EN (LTR) language switching, persisted per user           |
+| 📱 **PWA Experience**          | Installable app with offline caching and native-like install prompts          |
 
 ### 🛠️ Admin Dashboard (CMS)
 
-| Feature | Description |
-|---|---|
-| 🔐 **Secure Access** | Firebase Authentication-gated admin login |
-| 📊 **Real-Time Analytics** | Live sales charts, order statistics, and top-performing products |
-| 📦 **Order Management** | Status updates, full order timeline tracking, and history |
-| 🗂️ **Product & Category CMS** | Add/edit products, automated variant generator, rich text descriptions |
-| 🎨 **Homepage Customizer** | Dynamically manage hero banners, category highlights, and featured sections |
-| 📉 **Inventory Management** | Real-time stock levels with low-stock alerts |
-| 💬 **Reviews & Messages Manager** | Approve/reject customer reviews and reply to contact submissions |
+| Feature                           | Description                                                                 |
+| --------------------------------- | --------------------------------------------------------------------------- |
+| 🔐 **Secure Access**              | Firebase Authentication-gated admin login                                   |
+| 📊 **Real-Time Analytics**        | Live sales charts, order statistics, and top-performing products            |
+| 📦 **Order Management**           | Status updates, full order timeline tracking, and history                   |
+| 🗂️ **Product & Category CMS**     | Add/edit products, automated variant generator, rich text descriptions      |
+| 🎨 **Homepage Customizer**        | Dynamically manage hero banners, category highlights, and featured sections |
+| 📉 **Inventory Management**       | Real-time stock levels with low-stock alerts                                |
+| 💬 **Reviews & Messages Manager** | Approve/reject customer reviews and reply to contact submissions            |
 
 ---
 
@@ -101,16 +101,16 @@ The platform is **fully bilingual** (Arabic 🇪🇬 default with native RTL lay
 
 <div align="center">
 
-| Layer | Technology |
-|---|---|
-| **Core Framework** | React 19 + Vite |
-| **Full-Stack Framework** | TanStack Start (SSR powered by **Nitro**) |
-| **Routing** | TanStack Router *(type-safe, file-based)* |
-| **Data Fetching & State** | TanStack Query (React Query) |
-| **Styling** | Tailwind CSS v4 + Radix UI + shadcn/ui patterns |
-| **Backend / Database** | Firebase — Firestore, Firebase Storage, Firebase Auth |
-| **Internationalization** | Custom i18n — Arabic (RTL, default) + English (LTR) |
-| **PWA** | Service Worker, offline caching, installable manifest |
+| Layer                     | Technology                                            |
+| ------------------------- | ----------------------------------------------------- |
+| **Core Framework**        | React 19 + Vite                                       |
+| **Full-Stack Framework**  | TanStack Start (SSR powered by **Nitro**)             |
+| **Routing**               | TanStack Router _(type-safe, file-based)_             |
+| **Data Fetching & State** | TanStack Query (React Query)                          |
+| **Styling**               | Tailwind CSS v4 + Radix UI + shadcn/ui patterns       |
+| **Backend / Database**    | Firebase — Firestore, Firebase Storage, Firebase Auth |
+| **Internationalization**  | Custom i18n — Arabic (RTL, default) + English (LTR)   |
+| **PWA**                   | Service Worker, offline caching, installable manifest |
 
 </div>
 
@@ -150,12 +150,14 @@ Make sure you have the following installed:
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/your-username/sleephigh-egypt.git
    cd sleephigh-egypt
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
@@ -165,6 +167,7 @@ Make sure you have the following installed:
    Create a `.env` file in the project root (see template below).
 
 4. **Run the development server**
+
    ```bash
    npm run dev
    ```
@@ -189,13 +192,13 @@ VITE_FIREBASE_APP_ID=your_app_id
 
 ### Available Scripts
 
-| Command | Description |
-|---|---|
-| `npm install` | 📦 Install all project dependencies |
-| `npm run dev` | 💻 Start the local development server (HMR enabled) |
-| `npm run build` | 🏗️ Build the app for production with SSR/Nitro |
-| `npm run lint` | 🔍 Run ESLint checks across the codebase |
-| `npm run format` | 🎨 Auto-format code using Prettier |
+| Command          | Description                                         |
+| ---------------- | --------------------------------------------------- |
+| `npm install`    | 📦 Install all project dependencies                 |
+| `npm run dev`    | 💻 Start the local development server (HMR enabled) |
+| `npm run build`  | 🏗️ Build the app for production with SSR/Nitro      |
+| `npm run lint`   | 🔍 Run ESLint checks across the codebase            |
+| `npm run format` | 🎨 Auto-format code using Prettier                  |
 
 ---
 
