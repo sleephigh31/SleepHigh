@@ -6,7 +6,7 @@ import { listCategories } from "@/lib/services/firebase/categoryService";
 import { getHomepageSections } from "@/lib/services/firebase/homepageService";
 import { submitSiteMessage } from "@/lib/services/firebase/messageService";
 import confetti from "canvas-confetti";
-import { useHref, useT, useLocalized } from "@/lib/locale";
+import { useHref, useT, useLocalized, useDir } from "@/lib/locale";
 import type { Category, Product, HomepageSection, HeroSlide } from "@/lib/types";
 import { useStore } from "@/lib/store";
 import { HOME_TESTIMONIALS, HOME_BENEFITS } from "@/lib/content";
@@ -18,10 +18,20 @@ export const Route = createFileRoute("/$locale/")({
 const FALLBACK_IMAGE =
   "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=60&w=400&auto=format&fit=crop";
 
+/**
+ * Hero button links are stored with a leading locale segment (e.g. "/ar/collections").
+ * Strip it so `href()` can re-apply the currently active locale instead of producing
+ * a double prefix like "/ar/ar/collections". Links stored without a prefix are unaffected.
+ */
+function stripLocalePrefix(path: string): string {
+  return path.replace(/^\/(ar|en)(?=\/|$)/, "") || "/";
+}
+
 function HeroSlider({ slides }: { slides: HeroSlide[] }) {
   const [current, setCurrent] = useState(0);
   const href = useHref();
   const L = useLocalized();
+  const dir = useDir();
 
   useEffect(() => {
     if (!slides || slides.length <= 1) return;
@@ -35,54 +45,62 @@ function HeroSlider({ slides }: { slides: HeroSlide[] }) {
 
   return (
     <section className="relative h-[600px] md:h-[700px] w-full bg-[#e5e2e1] overflow-hidden">
-      {slides.map((slide, idx) => (
-        <div
-          key={slide.id || idx}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            idx === current ? "opacity-100 z-20" : "opacity-0 z-10"
-          }`}
-        >
-          <div className="absolute inset-0 bg-black/40 z-10" />
-          <img
-            src={slide.image || FALLBACK_IMAGE}
-            alt={L(slide.heading) || slide.headingAr}
-            width={1440}
-            height={700}
-            loading={idx === 0 ? "eager" : "lazy"}
-            decoding="async"
-            fetchPriority={idx === 0 ? "high" : "low"}
-            className={`absolute inset-0 w-full h-full object-cover transition-transform duration-[10000ms] ease-linear ${
-              idx === current ? "scale-105" : "scale-100"
+      {slides.map((slide, idx) => {
+        const heading = L({ ar: slide.headingAr, en: slide.headingEn });
+        const description = L({ ar: slide.descriptionAr, en: slide.descriptionEn });
+        const buttonText = L({ ar: slide.buttonTextAr, en: slide.buttonTextEn });
+        return (
+          <div
+            key={slide.id || idx}
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              idx === current ? "opacity-100 z-20" : "opacity-0 z-10"
             }`}
-          />
-          <div className="relative z-20 h-full flex flex-col items-center justify-center text-center text-white px-4 max-w-4xl mx-auto mt-8 md:mt-0">
-            <h1
-              className={`text-4xl md:text-5xl lg:text-[56px] font-bold mb-6 leading-tight transition-all duration-700 transform ${
-                idx === current ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+          >
+            <div className="absolute inset-0 bg-black/40 z-10" />
+            <img
+              src={slide.image || FALLBACK_IMAGE}
+              alt={heading}
+              width={1440}
+              height={700}
+              loading={idx === 0 ? "eager" : "lazy"}
+              decoding="async"
+              fetchPriority={idx === 0 ? "high" : "low"}
+              className={`absolute inset-0 w-full h-full object-cover transition-transform duration-[10000ms] ease-linear ${
+                idx === current ? "scale-105" : "scale-100"
               }`}
+            />
+            <div
+              dir={dir}
+              className="relative z-20 h-full flex flex-col items-center justify-center text-center text-white px-4 max-w-4xl mx-auto mt-8 md:mt-0"
             >
-              {L(slide.heading)}
-            </h1>
-            <p
-              className={`text-base md:text-lg lg:text-xl mb-10 text-white/90 max-w-2xl transition-all duration-700 delay-100 transform ${
-                idx === current ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
-              }`}
-            >
-              {L(slide.description)}
-            </p>
-              {slide.buttonText && slide.buttonLink && (
-              <Link
-                to={href(slide.buttonLink)}
-                className={`inline-block bg-white text-black px-8 py-3.5 rounded-full hover:bg-[#b90015] hover:text-white transition-colors duration-300 font-bold tracking-wide shadow-lg transform delay-200 ${
+              <h1
+                className={`text-4xl md:text-5xl lg:text-[56px] font-bold mb-6 leading-tight transition-all duration-700 transform ${
                   idx === current ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
                 }`}
               >
-                 {L(slide.buttonText)}
-              </Link>
-            )}
+                {heading}
+              </h1>
+              <p
+                className={`text-base md:text-lg lg:text-xl mb-10 text-white/90 max-w-2xl transition-all duration-700 delay-100 transform ${
+                  idx === current ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+                }`}
+              >
+                {description}
+              </p>
+              {buttonText && slide.buttonLink && (
+                <Link
+                  to={href(stripLocalePrefix(slide.buttonLink))}
+                  className={`inline-block bg-white text-black px-8 py-3.5 rounded-full hover:bg-[#b90015] hover:text-white transition-colors duration-300 font-bold tracking-wide shadow-lg transform delay-200 ${
+                    idx === current ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+                  }`}
+                >
+                  {buttonText}
+                </Link>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
 
       {/* Indicators */}
       {slides.length > 1 && (
