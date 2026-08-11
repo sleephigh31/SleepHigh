@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { X, Trash2, ShoppingBag, ArrowLeft } from "lucide-react";
 import { useStore } from "@/lib/store";
-import { useHref } from "@/lib/locale";
+import { useHref, useLocalized, useT, useFormatters } from "@/lib/locale";
 
 export function CartDrawer() {
   const {
@@ -15,6 +15,9 @@ export function CartDrawer() {
     removeLine,
   } = useStore();
   const href = useHref();
+  const L = useLocalized();
+  const t = useT();
+  const { price } = useFormatters();
 
   if (!cartOpen) return null;
 
@@ -30,10 +33,10 @@ export function CartDrawer() {
       <div className="relative z-10 flex h-full w-full max-w-md flex-col bg-card shadow-2xl text-foreground">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border p-4">
-          <div className="flex items-center space-x-2 space-x-reverse font-bold text-base">
-            <ShoppingBag className="h-5 w-5 text-brand" />
-            <span>سلة الشراء ({cartLines.length})</span>
-          </div>
+             <div className="flex items-center space-x-2 space-x-reverse font-bold text-base">
+             <ShoppingBag className="h-5 w-5 text-brand" />
+             <span>{t("cartDrawer.title", { count: cartLines.length })}</span>
+           </div>
           <button
             onClick={() => setCartOpen(false)}
             className="rounded-lg p-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
@@ -47,13 +50,13 @@ export function CartDrawer() {
           {cartLines.length === 0 ? (
             <div className="py-20 text-center space-y-3">
               <ShoppingBag className="mx-auto h-12 w-12 text-muted-foreground/40" />
-              <p className="text-sm font-bold text-muted-foreground">السلة فارغة حالياً</p>
-              <button
-                onClick={() => setCartOpen(false)}
-                className="rounded-xl bg-brand px-4 py-2 text-xs font-bold text-brand-foreground"
-              >
-                تصفح المنتجات
-              </button>
+               <p className="text-sm font-bold text-muted-foreground">{t("cartDrawer.empty")}</p>
+               <button
+                 onClick={() => setCartOpen(false)}
+                 className="rounded-xl bg-brand px-4 py-2 text-xs font-bold text-brand-foreground"
+               >
+                 {t("cartDrawer.browse")}
+               </button>
             </div>
           ) : (
             cartLines.map((line) => (
@@ -63,13 +66,13 @@ export function CartDrawer() {
               >
                 <img
                   src={line.product.images[0]?.src || ""}
-                  alt={line.product.name.ar}
+                  alt={L(line.product.name)}
                   className="h-16 w-16 rounded-xl object-cover border border-border bg-muted shrink-0"
                 />
 
                 <div className="flex-1 min-w-0 space-y-1">
                   <h4 className="text-xs font-bold text-foreground truncate">
-                    {line.product.name.ar}
+                    {L(line.product.name)}
                   </h4>
                   <p className="text-[11px] text-muted-foreground">
                     {Object.entries(line.variant.options)
@@ -95,7 +98,7 @@ export function CartDrawer() {
                     </div>
 
                     <span className="font-bold text-brand">
-                      {line.lineTotal.toLocaleString("ar-EG")} ج.م
+                      {price(line.lineTotal)}
                     </span>
 
                     <button
@@ -114,18 +117,18 @@ export function CartDrawer() {
         {/* Footer Checkout CTA */}
         {cartLines.length > 0 && (
           <div className="border-t border-border p-4 space-y-3 bg-muted/20">
-            <div className="flex justify-between text-xs font-bold text-foreground">
-              <span>المجموع الفرعي:</span>
-              <span className="text-brand text-sm">{subtotal.toLocaleString("ar-EG")} ج.م</span>
-            </div>
+              <div className="flex justify-between text-xs font-bold text-foreground">
+                <span>{t("cartDrawer.subtotal")}</span>
+                <span className="text-brand text-sm">{price(subtotal)}</span>
+              </div>
 
             <Link
               to={href("/checkout")}
               onClick={() => setCartOpen(false)}
               className="flex w-full items-center justify-center space-x-2 space-x-reverse rounded-xl bg-brand py-3 text-xs font-bold text-brand-foreground hover:bg-brand-hover shadow-md"
             >
-              <span>متابعة الشراء</span>
-              <ArrowLeft className="h-4 w-4" />
+               <span>{t("cartDrawer.checkout")}</span>
+               <ArrowLeft className="h-4 w-4" />
             </Link>
           </div>
         )}

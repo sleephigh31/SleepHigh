@@ -219,11 +219,9 @@ function SearchPage() {
             <ProductGrid products={products} />
           </div>
         ) : (
-          <div className="text-center py-12 text-gray-400 text-sm font-semibold">
-            {locale === "ar"
-              ? "أدخل كلمة البحث أعلاه للاستعراض."
-              : "Type a keyword above to search."}
-          </div>
+           <div className="text-center py-12 text-gray-400 text-sm font-semibold">
+             {t("search.prompt")}
+           </div>
         )}
       </div>
     </div>

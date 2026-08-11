@@ -6,9 +6,10 @@ import { listCategories } from "@/lib/services/firebase/categoryService";
 import { getHomepageSections } from "@/lib/services/firebase/homepageService";
 import { submitSiteMessage } from "@/lib/services/firebase/messageService";
 import confetti from "canvas-confetti";
-import { useHref } from "@/lib/locale";
+import { useHref, useT, useLocalized } from "@/lib/locale";
 import type { Category, Product, HomepageSection, HeroSlide } from "@/lib/types";
 import { useStore } from "@/lib/store";
+import { HOME_TESTIMONIALS, HOME_BENEFITS } from "@/lib/content";
 
 export const Route = createFileRoute("/$locale/")({
   component: StorefrontHomePage,
@@ -17,64 +18,10 @@ export const Route = createFileRoute("/$locale/")({
 const FALLBACK_IMAGE =
   "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=60&w=400&auto=format&fit=crop";
 
-const TESTIMONIALS = [
-  {
-    id: "1",
-    name: "سارة",
-    city: "القاهرة",
-    rating: 5,
-    body: "المرتبة اللي اشتريتها من سليب هاي غيّرت تجربة نومي تمامًا. مريحة جدًا، وبصحى كل يوم حاسة بالانتعاش. الجودة ممتازة.",
-  },
-  {
-    id: "2",
-    name: "أحمد",
-    city: "الإسكندرية",
-    rating: 5,
-    body: "أفضل استثمار عملته لراحتي. الوسائد الطبية ممتازة جداً وتدعم الرقبة بشكل مثالي، وخدمة العملاء كانت راقية.",
-  },
-  {
-    id: "3",
-    name: "محمود",
-    city: "الجيزة",
-    rating: 5,
-    body: "جودة المراتب تفوق التوقعات، السعر مقابل الجودة ممتاز. التوصيل كان سريع جداً ومندوب التوصيل كان متعاون.",
-  },
-  {
-    id: "4",
-    name: "منى",
-    city: "المنصورة",
-    rating: 5,
-    body: "الخامات المستخدمة فخمة جداً، بحس إني نايمة في فندق 5 نجوم. شكراً سليب هاي على الجودة الرائعة.",
-  },
-];
-
-const BENEFITS = [
-  {
-    icon: "verified",
-    title: "جودة لا تتنازل",
-    desc: "نحن ملتزمون بتقديم منتجات عالية الجودة، مصنوعة بعناية للتفاصيل والدقة. التزامنا بالتفوق يضمن أن كل عنصر مصنوع ليتجاوز توقعاتك مما يوفر لك راحة لا مثيل لها.",
-  },
-  {
-    icon: "handshake",
-    title: "حرفية يدوية",
-    desc: "تم صنع كل منتجاتنا بحب من قبل حرفيين ماهرين يضعون خبرتهم وشغفهم في كل تفصيلة. هذا الحس الحرفي يضمن مستوى من الحرفية والتميز يميز منتجاتنا مما يرتقي بتجربتك.",
-  },
-  {
-    icon: "price_check",
-    title: "رفاهية بأسعار معقولة",
-    desc: "نحن نعتقد أن الرفاهية لا يجب أن تأتي بسعر مرتفع. لهذا السبب نقدم منتجاتنا الاستثنائية بأسعار معقولة، مما يجعل الجودة والراحة متاحة للجميع.",
-  },
-  {
-    icon: "local_shipping",
-    title: "تكنولوجيا حديثة",
-    desc: "نستغل قوة الآلات عالية التقنية لتعزيز عمليات تصنيعنا من خلال دمج التقنيات المتقدمة، نضمن الدقة والكفاءة والاستمرارية في إنتاج منتجاتنا.",
-  },
-];
-
-/* ── Hero Slider ───────────────────────────────────────────────── */
 function HeroSlider({ slides }: { slides: HeroSlide[] }) {
   const [current, setCurrent] = useState(0);
   const href = useHref();
+  const L = useLocalized();
 
   useEffect(() => {
     if (!slides || slides.length <= 1) return;
@@ -98,7 +45,7 @@ function HeroSlider({ slides }: { slides: HeroSlide[] }) {
           <div className="absolute inset-0 bg-black/40 z-10" />
           <img
             src={slide.image || FALLBACK_IMAGE}
-            alt={slide.headingAr}
+            alt={L(slide.heading) || slide.headingAr}
             width={1440}
             height={700}
             loading={idx === 0 ? "eager" : "lazy"}
@@ -114,23 +61,23 @@ function HeroSlider({ slides }: { slides: HeroSlide[] }) {
                 idx === current ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
               }`}
             >
-              {slide.headingAr}
+              {L(slide.heading)}
             </h1>
             <p
               className={`text-base md:text-lg lg:text-xl mb-10 text-white/90 max-w-2xl transition-all duration-700 delay-100 transform ${
                 idx === current ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
               }`}
             >
-              {slide.descriptionAr}
+              {L(slide.description)}
             </p>
-            {slide.buttonTextAr && slide.buttonLink && (
+              {slide.buttonText && slide.buttonLink && (
               <Link
                 to={href(slide.buttonLink)}
                 className={`inline-block bg-white text-black px-8 py-3.5 rounded-full hover:bg-[#b90015] hover:text-white transition-colors duration-300 font-bold tracking-wide shadow-lg transform delay-200 ${
                   idx === current ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
                 }`}
               >
-                {slide.buttonTextAr}
+                 {L(slide.buttonText)}
               </Link>
             )}
           </div>
@@ -161,6 +108,8 @@ function TestimonialSlider() {
   const [active, setActive] = useState(0);
   const [animating, setAnimating] = useState(false);
   const [direction, setDirection] = useState<"left" | "right">("left");
+  const t = useT();
+  const L = useLocalized();
 
   const go = useCallback(
     (nextIndex: number, dir: "left" | "right") => {
@@ -175,10 +124,10 @@ function TestimonialSlider() {
     [animating],
   );
 
-  const next = () => go((active + 1) % TESTIMONIALS.length, "left");
-  const prev = () => go((active - 1 + TESTIMONIALS.length) % TESTIMONIALS.length, "right");
+  const next = () => go((active + 1) % HOME_TESTIMONIALS.length, "left");
+  const prev = () => go((active - 1 + HOME_TESTIMONIALS.length) % HOME_TESTIMONIALS.length, "right");
 
-  const t = TESTIMONIALS[active];
+  const testimonial = HOME_TESTIMONIALS[active];
 
   /* slide-in/slide-out keyframes via inline style trick */
   const slideClass = animating
@@ -191,7 +140,7 @@ function TestimonialSlider() {
     <div className="relative bg-[#fcf9f8] p-8 md:p-16 rounded-[2rem] shadow-sm border border-[#e7bdb8]/20 overflow-visible mx-auto max-w-4xl">
       {/* Stars */}
       <div className="flex justify-center text-[#f1c100] mb-8 gap-1">
-        {Array.from({ length: t?.rating || 5 }).map((_, i) => (
+        {Array.from({ length: testimonial?.rating || 5 }).map((_, i) => (
           <Star key={i} className="h-6 w-6 fill-current" />
         ))}
       </div>
@@ -202,17 +151,17 @@ function TestimonialSlider() {
         style={{ transitionDuration: "350ms" }}
       >
         <p className="text-lg md:text-2xl leading-relaxed font-medium mb-8 text-[#1c1b1b] text-center max-w-3xl">
-          "{t?.body}"
+          "{L(testimonial?.body)}"
         </p>
         <div className="flex flex-col items-center gap-1.5">
-          <span className="font-bold text-[#1c1b1b] text-lg">{t?.name}</span>
-          <span className="text-sm text-[#926f6b] font-medium">{t?.city}</span>
+          <span className="font-bold text-[#1c1b1b] text-lg">{L(testimonial?.name)}</span>
+          <span className="text-sm text-[#926f6b] font-medium">{L(testimonial?.city)}</span>
         </div>
       </div>
 
       {/* Dot indicators */}
       <div className="flex justify-center gap-2.5 mt-10">
-        {TESTIMONIALS.map((_, i) => (
+        {HOME_TESTIMONIALS.map((_, i) => (
           <button
             key={i}
             onClick={() => go(i, i > active ? "left" : "right")}
@@ -221,7 +170,7 @@ function TestimonialSlider() {
                 ? "w-8 h-2.5 bg-[#b90015]"
                 : "w-2.5 h-2.5 bg-[#e7bdb8] hover:bg-[#926f6b]"
             }`}
-            aria-label={`آراء العميل ${i + 1}`}
+              aria-label={t("home.testimonialNav", { index: i + 1 })}
           />
         ))}
       </div>
@@ -230,14 +179,14 @@ function TestimonialSlider() {
       <button
         onClick={prev}
         className="hidden md:flex absolute top-1/2 -translate-y-1/2 -right-6 w-14 h-14 bg-white rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] items-center justify-center text-[#5d3f3c] hover:text-[#b90015] hover:scale-110 transition-all border border-transparent hover:border-[#e7bdb8]/40 z-10"
-        aria-label="السابق"
+          aria-label={t("common.previous")}
       >
         <ChevronRight className="h-6 w-6 ml-1" />
       </button>
       <button
         onClick={next}
         className="hidden md:flex absolute top-1/2 -translate-y-1/2 -left-6 w-14 h-14 bg-white rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] items-center justify-center text-[#5d3f3c] hover:text-[#b90015] hover:scale-110 transition-all border border-transparent hover:border-[#e7bdb8]/40 z-10"
-        aria-label="التالي"
+          aria-label={t("common.next")}
       >
         <ChevronLeft className="h-6 w-6 mr-1" />
       </button>
@@ -247,14 +196,14 @@ function TestimonialSlider() {
         <button
           onClick={prev}
           className="flex w-12 h-12 bg-white rounded-full shadow-md items-center justify-center text-[#5d3f3c] hover:text-[#b90015] hover:bg-[#fcf9f8] transition-all"
-          aria-label="السابق"
+        aria-label={t("common.previous")}
         >
           <ChevronRight className="h-6 w-6 ml-1" />
         </button>
         <button
           onClick={next}
           className="flex w-12 h-12 bg-white rounded-full shadow-md items-center justify-center text-[#5d3f3c] hover:text-[#b90015] hover:bg-[#fcf9f8] transition-all"
-          aria-label="التالي"
+        aria-label={t("common.next")}
         >
           <ChevronLeft className="h-6 w-6 mr-1" />
         </button>
@@ -277,6 +226,8 @@ function ProductCard({
   aspectClass?: string | undefined;
   objectFit?: "contain" | "cover" | undefined;
 }) {
+  const L = useLocalized();
+  const t = useT();
   return (
     <div className="w-full bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group border border-gray-100 flex flex-col relative h-full">
       <Link
@@ -285,7 +236,7 @@ function ProductCard({
       >
         <img
           src={product.images[0]?.src || FALLBACK_IMAGE}
-          alt={product.name.ar}
+          alt={L(product.name)}
           width={600}
           height={600}
           loading="lazy"
@@ -298,7 +249,7 @@ function ProductCard({
       <div className="p-5 text-right flex flex-col flex-1 bg-white relative">
         <Link to={href(`/products/${product.slug}`)} className="block flex-1 mb-2">
           <h3 className="font-bold text-lg text-[#1c1b1b] line-clamp-2 leading-snug group-hover:text-[#b90015] transition-colors">
-            {product.name.ar}
+            {L(product.name)}
           </h3>
         </Link>
         <div className="flex justify-end text-[#f1c100] mb-3 gap-0.5">
@@ -310,11 +261,11 @@ function ProductCard({
           <button
             onClick={() => addToCart(product.id, product.variants?.[0]?.id || "", 1)}
             className="flex items-center justify-center w-10 h-10 rounded-full bg-[#f6f3f2] text-[#5d3f3c] hover:bg-[#b90015] hover:text-white transition-colors"
-            aria-label="أضف إلى السلة"
+            aria-label={t("product.addToCart")}
           >
             <ShoppingBag className="h-5 w-5" />
           </button>
-          <p className="text-[#b90015] font-black text-lg">{product.price.toLocaleString()} ج.م</p>
+          <p className="text-[#b90015] font-black text-lg">{product.price.toLocaleString()} {t("common.currency")}</p>
         </div>
       </div>
     </div>
@@ -388,6 +339,7 @@ function ProductCarousel({
 function NewsletterSection() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const t = useT();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -395,11 +347,11 @@ function NewsletterSection() {
 
     setStatus("loading");
     const res = await submitSiteMessage({
-      name: "مشترك النشرة البريدية",
-      phone: "غير متوفر",
+      name: t("home.newsletterSubscriber"),
+      phone: t("home.newsletterUnavailable"),
       email: email,
-      subject: "طلب اشتراك في النشرة البريدية",
-      message: `يرغب ${email} في الاشتراك في النشرة البريدية لتلقي العروض.`,
+      subject: t("home.newsletterSubject"),
+      message: t("home.newsletterBody", { email }),
     });
 
     if (res.ok) {
@@ -420,19 +372,19 @@ function NewsletterSection() {
       <div className="bg-[#1c1b1b] text-white p-10 md:p-16 rounded-[2rem] flex flex-col md:flex-row items-center justify-between shadow-xl gap-8 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
         <div className="text-center md:text-right md:w-1/2 relative z-10">
-          <h3 className="text-3xl md:text-[40px] font-bold mb-4">كن أول من يعرف</h3>
-          <p className="text-gray-300 text-base md:text-lg">
-            احصل على الوصول المبكر وخصم على قائمة الرغبات وأكثر من ذلك. خصوصيتك هي سياستنا.
-          </p>
+           <h3 className="text-3xl md:text-[40px] font-bold mb-4">{t("home.newsletterTitle")}</h3>
+           <p className="text-gray-300 text-base md:text-lg">
+             {t("home.newsletterText")}
+           </p>
         </div>
         <div className="w-full md:w-1/2 relative z-10">
           {status === "success" ? (
             <div className="flex flex-col items-center justify-center space-y-4 bg-white/10 p-8 rounded-2xl border border-white/20 animate-in fade-in zoom-in duration-500">
               <CheckCircle className="h-16 w-16 text-green-400" />
-              <h4 className="text-2xl font-bold text-white text-center">شكرًا لاشتراكك!</h4>
-              <p className="text-gray-200 text-center text-lg">
-                سيتم إرسال كل العروض الحصرية والأخبار مباشرة إلى بريدك الإلكتروني.
-              </p>
+               <h4 className="text-2xl font-bold text-white text-center">{t("home.newsletterSuccessTitle")}</h4>
+               <p className="text-gray-200 text-center text-lg">
+                 {t("home.newsletterSuccessText")}
+               </p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
@@ -443,21 +395,21 @@ function NewsletterSection() {
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={status === "loading"}
                 className="flex-grow px-6 py-4 rounded-full text-right focus:outline-none text-black bg-white placeholder:text-gray-400 font-medium disabled:opacity-70"
-                placeholder="اكتب عنوان بريدك الإلكتروني"
+                 placeholder={t("home.newsletterPlaceholder")}
               />
               <button
                 type="submit"
                 disabled={status === "loading"}
                 className="bg-[#b90015] text-white px-10 py-4 rounded-full hover:bg-white hover:text-[#b90015] transition-colors duration-300 font-bold whitespace-nowrap shadow-lg disabled:opacity-70"
               >
-                {status === "loading" ? "جاري الاشتراك..." : "اشترك"}
+                 {status === "loading" ? t("home.newsletterSubmitting") : t("home.newsletterSubmit")}
               </button>
             </form>
           )}
           {status === "error" && (
-            <p className="text-red-400 mt-3 text-sm text-center md:text-right">
-              حدث خطأ، يرجى المحاولة مرة أخرى.
-            </p>
+              <p className="text-red-400 mt-3 text-sm text-center md:text-right">
+                {t("home.newsletterError")}
+              </p>
           )}
         </div>
       </div>
@@ -468,6 +420,8 @@ function NewsletterSection() {
 /* ── Main Page ─────────────────────────────────────────────────── */
 function StorefrontHomePage() {
   const href = useHref();
+  const t = useT();
+  const L = useLocalized();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [homepageData, setHomepageData] = useState<HomepageSection[]>([]);
@@ -523,9 +477,9 @@ function StorefrontHomePage() {
 
         {/* ── CATEGORIES ───────────────────────────────────────── */}
         <section className="max-w-[1280px] mx-auto px-5 md:px-[64px] py-16 md:py-24">
-          <h2 className="text-center text-3xl md:text-[36px] font-bold mb-14 text-[#1c1b1b]">
-            اكتشف منتجاتنا
-          </h2>
+           <h2 className="text-center text-3xl md:text-[36px] font-bold mb-14 text-[#1c1b1b]">
+             {t("home.categoriesTitle")}
+           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {categories.slice(0, 3).map((cat, i) => (
               <Link
@@ -536,7 +490,7 @@ function StorefrontHomePage() {
                 <div className="overflow-hidden mb-6 rounded-2xl bg-[#f6f3f2] aspect-[4/3] shadow-sm group-hover:shadow-lg transition-all duration-500">
                   <img
                     src={cat.image || FALLBACK_IMAGE}
-                    alt={cat.name.ar}
+                    alt={L(cat.name)}
                     width={600}
                     height={450}
                     loading="lazy"
@@ -545,7 +499,7 @@ function StorefrontHomePage() {
                   />
                 </div>
                 <h3 className="text-2xl font-bold mb-2 group-hover:text-[#b90015] transition-colors text-[#1c1b1b]">
-                  {cat.name.ar}
+                   {L(cat.name)}
                 </h3>
               </Link>
             ))}
@@ -555,13 +509,14 @@ function StorefrontHomePage() {
         {/* ── MATTRESSES ───────────────────────────────────────── */}
         <section className="bg-[#f6f3f2] py-20 md:py-28">
           <div className="max-w-[1280px] mx-auto px-5 md:px-[64px]">
-            <div className="text-center mb-14">
-              <h2 className="text-3xl md:text-[36px] font-bold mb-4 text-[#1c1b1b]">المراتب</h2>
-              <p className="text-[#5d3f3c] max-w-2xl mx-auto text-base md:text-lg">
-                استكشف مجموعتنا المتنوعة من المراتب المصممة لتناسب احتياجاتك الخاصة لتجربة نوم مريحة
-                ومجددة
-              </p>
-            </div>
+             <div className="text-center mb-14">
+               <h2 className="text-3xl md:text-[36px] font-bold mb-4 text-[#1c1b1b]">
+                 {t("home.mattressesTitle")}
+               </h2>
+               <p className="text-[#5d3f3c] max-w-2xl mx-auto text-base md:text-lg">
+                 {t("home.mattressesText")}
+               </p>
+             </div>
             <ProductCarousel
               products={displayMattresses}
               href={href}
@@ -575,13 +530,14 @@ function StorefrontHomePage() {
         {/* ── PILLOWS ──────────────────────────────────────────── */}
         <section className="py-20 md:py-28">
           <div className="max-w-[1280px] mx-auto px-5 md:px-[64px]">
-            <div className="text-center mb-14">
-              <h2 className="text-3xl md:text-[36px] font-bold mb-4 text-[#1c1b1b]">الوسائد</h2>
-              <p className="text-[#5d3f3c] max-w-2xl mx-auto text-base md:text-lg">
-                استكشف مجموعتنا المتنوعة من الوسائد المصممة لدعم تفضيلاتك الفريدة في النوم وتعزيز
-                راحتك
-              </p>
-            </div>
+             <div className="text-center mb-14">
+               <h2 className="text-3xl md:text-[36px] font-bold mb-4 text-[#1c1b1b]">
+                 {t("home.pillowsTitle")}
+               </h2>
+               <p className="text-[#5d3f3c] max-w-2xl mx-auto text-base md:text-lg">
+                 {t("home.pillowsText")}
+               </p>
+             </div>
             <ProductCarousel
               products={displayPillows}
               href={href}
@@ -596,34 +552,33 @@ function StorefrontHomePage() {
         <section className="bg-white py-20 md:py-28 border-y border-gray-100">
           <div className="max-w-5xl mx-auto px-5">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-[36px] font-bold mb-4 text-[#1c1b1b]">
-                آراء العملاء
-              </h2>
-              <p className="text-[#5d3f3c] max-w-2xl mx-auto text-base md:text-lg">
-                اكتشف سبب اختيار عملائنا لـ سليب هاي. استمع إلى قصصهم عن الراحة المحسنة والنوم
-                الأفضل
-              </p>
+             <h2 className="text-3xl md:text-[36px] font-bold mb-4 text-[#1c1b1b]">
+               {t("home.testimonialsTitle")}
+             </h2>
+             <p className="text-[#5d3f3c] max-w-2xl mx-auto text-base md:text-lg">
+               {t("home.testimonialsText")}
+             </p>
             </div>
             <TestimonialSlider />
           </div>
         </section>
 
         {/* ── BENEFITS ─────────────────────────────────────────── */}
-        <section className="py-20 max-w-[1280px] mx-auto px-5 md:px-[64px]">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center">
-            {BENEFITS.map((benefit, i) => (
-              <div key={i} className="px-2">
-                <div className="flex justify-center mb-6 text-[#b90015] bg-[#f6f3f2] w-20 h-20 mx-auto rounded-full items-center shadow-sm">
-                  <Star className="h-10 w-10 stroke-[1.5]" />
-                </div>
-                <h4 className="font-bold mb-3 text-[#1c1b1b] text-base md:text-lg">
-                  {benefit.title}
-                </h4>
-                <p className="text-sm text-[#5d3f3c] leading-relaxed">{benefit.desc}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+         <section className="py-20 max-w-[1280px] mx-auto px-5 md:px-[64px]">
+           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center">
+             {HOME_BENEFITS.map((benefit, i) => (
+               <div key={i} className="px-2">
+                 <div className="flex justify-center mb-6 text-[#b90015] bg-[#f6f3f2] w-20 h-20 mx-auto rounded-full items-center shadow-sm">
+                   <Star className="h-10 w-10 stroke-[1.5]" />
+                 </div>
+                 <h4 className="font-bold mb-3 text-[#1c1b1b] text-base md:text-lg">
+                   {L(benefit.title)}
+                 </h4>
+                 <p className="text-sm text-[#5d3f3c] leading-relaxed">{L(benefit.desc)}</p>
+               </div>
+             ))}
+           </div>
+         </section>
 
         {/* ── NEWSLETTER ───────────────────────────────────────── */}
         <NewsletterSection />

@@ -1,6 +1,6 @@
 import { ReactNode, useEffect } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useDir, useHref } from "@/lib/locale";
+import { useDir, useHref, useT } from "@/lib/locale";
 import { useStore } from "@/lib/store";
 import {
   UserCircle,
@@ -24,6 +24,7 @@ export function AccountLayout({ children, activeTab }: AccountLayoutProps) {
   const { user, hydrated, logout } = useStore();
   const dir = useDir();
   const href = useHref();
+  const t = useT();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,9 +35,9 @@ export function AccountLayout({ children, activeTab }: AccountLayoutProps) {
 
   if (!hydrated || !user) {
     return (
-      <div className="py-24 text-center text-muted-foreground font-bold">
-        جاري تحميل البيانات...
-      </div>
+       <div className="py-24 text-center text-muted-foreground font-bold">
+         {t("common.loading")}
+       </div>
     );
   }
 
@@ -46,22 +47,22 @@ export function AccountLayout({ children, activeTab }: AccountLayoutProps) {
   };
 
   const navItems = [
-    { id: "dashboard", label: "لوحة التحكم", icon: LayoutDashboard, path: "/account" },
-    { id: "orders", label: "طلباتي", icon: Package, path: "/account/orders" },
-    { id: "addresses", label: "عناويني", icon: MapPin, path: "/account/addresses" },
-    { id: "settings", label: "إعدادات الحساب", icon: Settings, path: "/account/settings" },
+    { id: "dashboard", label: t("account.dashboard"), icon: LayoutDashboard, path: "/account" },
+    { id: "orders", label: t("account.orders"), icon: Package, path: "/account/orders" },
+    { id: "addresses", label: t("account.addresses"), icon: MapPin, path: "/account/addresses" },
+    { id: "settings", label: t("account.settings"), icon: Settings, path: "/account/settings" },
   ] as const;
 
   return (
     <div className={cn("container-page py-12 space-y-8", dir === "rtl" ? "dir-rtl" : "dir-ltr")}>
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-border pb-4">
-        <h1 className="fluid-h2 font-bold text-foreground">حسابي</h1>
+         <h1 className="fluid-h2 font-bold text-foreground">{t("account.title")}</h1>
         <button
           onClick={handleLogout}
           className="flex items-center gap-2 rounded-xl bg-destructive/10 px-4 py-2 font-bold text-destructive hover:bg-destructive/20 transition-colors text-sm"
         >
           <LogOut className="h-4 w-4" />
-          <span>تسجيل الخروج</span>
+           <span>{t("account.logout")}</span>
         </button>
       </div>
 
@@ -128,17 +129,17 @@ export function AccountLayout({ children, activeTab }: AccountLayoutProps) {
                   <ShieldCheck className="h-6 w-6 text-brand" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-foreground">لوحة إدارة المتجر</h3>
-                  <p className="text-xs text-muted-foreground mt-1 mb-4">
-                    أنت تمتلك صلاحيات مدير. يمكنك إدارة المنتجات، الطلبات، والعملاء.
-                  </p>
+                   <h3 className="font-bold text-foreground">{t("account.adminPanel")}</h3>
+                   <p className="text-xs text-muted-foreground mt-1 mb-4">
+                     {t("account.adminPanelText")}
+                   </p>
                 </div>
                 <Link
                   to="/admin"
                   className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-4 py-2.5 font-bold text-brand-foreground hover:bg-brand-hover transition-all shadow-md shadow-brand/20"
                 >
                   <ShieldCheck className="h-4 w-4" />
-                  <span>الدخول للوحة التحكم</span>
+                   <span>{t("account.adminPanelCta")}</span>
                 </Link>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, useParams, Link } from "@tanstack/react-router";
-import { useLocalized, useDir } from "@/lib/locale";
+import { useLocalized, useDir, useT, useHref } from "@/lib/locale";
 import { useStore } from "@/lib/store";
 import {
   getProduct,
@@ -40,6 +40,8 @@ function ProductDetailsPage() {
   const { slug, locale } = useParams({ from: "/$locale/products/$slug" });
   const L = useLocalized();
   const dir = useDir();
+  const t = useT();
+  const href = useHref();
   const { addToCart, setCartOpen, user, requestLogin } = useStore();
 
   const [product, setProduct] = useState<Product | null>(null);
@@ -132,15 +134,15 @@ function ProductDetailsPage() {
   if (!product) {
     return (
       <div className="container-page py-24 text-center space-y-4">
-        <h1 className="text-2xl font-bold">المنتج غير موجود</h1>
-        <p className="text-muted-foreground">عذراً، لم نتمكن من العثور على هذا المنتج.</p>
-        <Link
-          to="/$locale"
-          params={{ locale }}
-          className="inline-block mt-4 text-[#C8102E] hover:underline font-bold"
-        >
-          العودة للرئيسية
-        </Link>
+         <h1 className="text-2xl font-bold">{t("product.notFound")}</h1>
+         <p className="text-muted-foreground">{t("product.notFoundHint")}</p>
+         <Link
+           to="/$locale"
+           params={{ locale }}
+           className="inline-block mt-4 text-[#C8102E] hover:underline font-bold"
+         >
+           {t("common.backHome")}
+         </Link>
       </div>
     );
   }
@@ -228,17 +230,17 @@ function ProductDetailsPage() {
 
       {/* Breadcrumb */}
       <nav className="flex text-sm text-muted-foreground items-center gap-2 overflow-x-auto whitespace-nowrap pb-2">
-        <Link to="/$locale" params={{ locale }} className="hover:text-foreground transition-colors">
-          الرئيسية
-        </Link>
+         <Link to="/$locale" params={{ locale }} className="hover:text-foreground transition-colors">
+           {t("common.home")}
+         </Link>
         <span className="text-gray-400">/</span>
-        <Link
-          to="/$locale/collections"
-          params={{ locale }}
-          className="hover:text-foreground transition-colors"
-        >
-          المنتجات
-        </Link>
+         <Link
+           to="/$locale/collections"
+           params={{ locale }}
+           className="hover:text-foreground transition-colors"
+         >
+           {t("product.breadcrumbProducts")}
+         </Link>
         <span className="text-gray-400">/</span>
         <span className="text-foreground font-medium truncate max-w-[200px]">
           {L(product.name)}
@@ -263,7 +265,7 @@ function ProductDetailsPage() {
                       type="button"
                       onClick={handlePrev}
                       className="absolute left-3 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-background/80 text-foreground shadow-md backdrop-blur-sm transition hover:bg-background"
-                      aria-label="الصورة السابقة"
+                       aria-label={t("product.previousImage")}
                     >
                       <ChevronLeft className="h-5 w-5" />
                     </button>
@@ -271,7 +273,7 @@ function ProductDetailsPage() {
                       type="button"
                       onClick={handleNext}
                       className="absolute right-3 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-background/80 text-foreground shadow-md backdrop-blur-sm transition hover:bg-background"
-                      aria-label="الصورة التالية"
+                       aria-label={t("product.nextImage")}
                     >
                       <ChevronRight className="h-5 w-5" />
                     </button>
@@ -283,8 +285,8 @@ function ProductDetailsPage() {
                       type="button"
                       className="absolute bottom-4 left-4 flex items-center gap-1.5 rounded-full bg-background/80 px-3 py-1.5 text-xs font-semibold text-foreground shadow-md backdrop-blur-sm transition hover:bg-background"
                     >
-                      <ZoomIn className="h-4 w-4" />
-                      تكبير
+                       <ZoomIn className="h-4 w-4" />
+                       {t("product.zoom")}
                     </button>
                   </DialogTrigger>
                   <DialogContent className="max-h-[90dvh] max-w-[calc(100vw-2rem)] border-0 bg-transparent p-0 shadow-none sm:max-w-5xl">
@@ -299,9 +301,9 @@ function ProductDetailsPage() {
                 </Dialog>
               </>
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-muted-foreground">
-                لا توجد صورة
-              </div>
+                 <div className="flex h-full w-full items-center justify-center text-muted-foreground">
+                 {t("product.noImage")}
+               </div>
             )}
             <div className="absolute top-4 right-4 z-10">
               <WishlistButton
@@ -323,7 +325,7 @@ function ProductDetailsPage() {
                       ? "border-brand"
                       : "border-transparent hover:border-gray-200",
                   )}
-                  aria-label={`عرض الصورة ${idx + 1}`}
+                  aria-label={t("product.showImage", { index: idx + 1 })}
                 >
                   <img src={img.src} alt="" className="h-full w-full object-cover bg-gray-50" />
                 </button>
@@ -351,7 +353,9 @@ function ProductDetailsPage() {
                     />
                   ))}
                 </div>
-                <span className="text-xs text-muted-foreground">({product.reviewCount} تقييم)</span>
+                <span className="text-xs text-muted-foreground">
+                  {t("product.reviewsCount", { count: product.reviewCount })}
+                </span>
               </div>
             )}
           </div>
@@ -389,7 +393,7 @@ function ProductDetailsPage() {
             {viewerCount !== null && (
               <div className="flex items-center justify-center gap-2 text-base font-bold text-gray-800 bg-white shadow-sm border border-gray-100 px-5 py-3 rounded-full animate-in fade-in slide-in-from-bottom-2">
                 <Eye className="h-6 w-6 text-brand" />
-                <span>{viewerCount} عميل يشاهدون هذا المنتج الآن</span>
+                <span>{t("product.viewers", { count: viewerCount })}</span>
               </div>
             )}
           </div>
@@ -402,8 +406,8 @@ function ProductDetailsPage() {
               <Dialog>
                 <DialogTrigger asChild>
                   <button className="flex items-center gap-1.5 text-sm font-bold text-gray-500 hover:text-brand transition-colors">
-                    <Ruler className="h-4 w-4" />
-                    دليل المقاسات
+                   <Ruler className="h-4 w-4" />
+                   {t("product.sizeGuide")}
                   </button>
                 </DialogTrigger>
                 <DialogContent className="max-w-3xl p-0 overflow-hidden bg-white border-none rounded-2xl">
@@ -444,7 +448,7 @@ function ProductDetailsPage() {
                   className="flex-1 flex items-center justify-center gap-2 rounded-2xl bg-black px-6 h-[52px] font-bold text-white transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100"
                 >
                   <ShoppingCart className="h-5 w-5" />
-                  <span>{isAvailable ? "أضف إلى السلة" : "نفدت الكمية"}</span>
+                  {t(isAvailable ? "product.addToCart" : "product.outOfStock")}
                 </button>
               </div>
               <button
@@ -456,32 +460,32 @@ function ProductDetailsPage() {
                 disabled={!isAvailable}
                 className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gray-200 px-6 h-[52px] font-bold text-black transition-transform hover:bg-gray-300 active:scale-[0.98] disabled:opacity-50"
               >
-                <span>اشترِ الآن</span>
+                <span>{t("product.buyNow")}</span>
               </button>
             </div>
             {product.variants.length > 0 &&
               variant &&
               variant.stock <= (product.lowStockThreshold || 5) &&
               variant.stock > 0 && (
-                <p className="text-sm text-warning font-semibold">
-                  تبقى {variant.stock} فقط في المخزون!
-                </p>
+                 <p className="text-sm text-warning font-semibold">
+                   {t("product.lowStockWarning", { count: variant.stock })}
+                 </p>
               )}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t border-border">
-            <div className="flex items-center gap-3 text-sm font-medium text-muted-foreground">
-              <Truck className="h-5 w-5 text-gray-400" />
-              <span>شحن سريع خلال 3-5 أيام</span>
-            </div>
-            <div className="flex items-center gap-3 text-sm font-medium text-muted-foreground">
-              <ShieldCheck className="h-5 w-5 text-gray-400" />
-              <span>دفع آمن 100%</span>
-            </div>
-            <div className="flex items-center gap-3 text-sm font-medium text-muted-foreground">
-              <RotateCcw className="h-5 w-5 text-gray-400" />
-              <span>استرجاع مجاني خلال 14 يوم</span>
-            </div>
+              <div className="flex items-center gap-3 text-sm font-medium text-muted-foreground">
+               <Truck className="h-5 w-5 text-gray-400" />
+               <span>{t("product.trustFastShipping")}</span>
+             </div>
+             <div className="flex items-center gap-3 text-sm font-medium text-muted-foreground">
+               <ShieldCheck className="h-5 w-5 text-gray-400" />
+               <span>{t("product.trustSecurePayment")}</span>
+             </div>
+             <div className="flex items-center gap-3 text-sm font-medium text-muted-foreground">
+               <RotateCcw className="h-5 w-5 text-gray-400" />
+               <span>{t("product.trustReturns")}</span>
+             </div>
             <div className="flex items-center gap-3 text-sm font-medium text-muted-foreground">
               {copied ? (
                 <ShieldCheck className="h-5 w-5 text-green-500" />
@@ -492,7 +496,7 @@ function ProductDetailsPage() {
                 className={`transition-colors ${copied ? "text-green-600 font-bold" : "hover:text-foreground"}`}
                 onClick={handleShare}
               >
-                {copied ? "تم نسخ الرابط!" : "مشاركة المنتج"}
+                 {copied ? t("product.linkCopied") : t("product.share")}
               </button>
             </div>
           </div>
@@ -502,7 +506,7 @@ function ProductDetailsPage() {
       {/* Description & Specs */}
       <div className="mx-auto max-w-4xl space-y-12 pt-12 border-t border-border">
         <div className="space-y-6">
-          <h2 className="text-2xl font-bold">وصف المنتج</h2>
+           <h2 className="text-2xl font-bold">{t("product.descriptionTitle")}</h2>
           <div className="text-muted-foreground leading-relaxed whitespace-pre-line">
             {L(product.description)}
           </div>
@@ -512,7 +516,7 @@ function ProductDetailsPage() {
           <div className="grid md:grid-cols-2 gap-8 bg-card p-8 rounded-3xl border border-border">
             {L(product.materials) && (
               <div className="space-y-4">
-                <h3 className="text-lg font-bold text-foreground">الخامات والتكوين</h3>
+                 <h3 className="text-lg font-bold text-foreground">{t("product.materialsTitle")}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
                   {L(product.materials)}
                 </p>
@@ -520,7 +524,7 @@ function ProductDetailsPage() {
             )}
             {product.features.length > 0 && (
               <div className="space-y-4">
-                <h3 className="text-lg font-bold text-foreground">المميزات الأساسية</h3>
+                 <h3 className="text-lg font-bold text-foreground">{t("product.featuresTitle")}</h3>
                 <ul className="space-y-2">
                   {product.features.map((feat, idx) => (
                     <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
@@ -539,12 +543,12 @@ function ProductDetailsPage() {
       {related.length > 0 && (
         <div className="space-y-8 pt-12 border-t border-border">
           <div className="text-center">
-            <h2 className="fluid-h2 font-black tracking-tight text-gray-900">
-              منتجات أخرى قد تعجبك
-            </h2>
-            <p className="mx-auto mt-2 max-w-lg text-sm text-gray-500">
-              اكتشف المزيد من المنتجات المميزة في نفس القسم
-            </p>
+             <h2 className="fluid-h2 font-black tracking-tight text-gray-900">
+               {t("product.relatedTitle")}
+             </h2>
+             <p className="mx-auto mt-2 max-w-lg text-sm text-gray-500">
+               {t("product.relatedSub")}
+             </p>
           </div>
           <ProductGrid products={related.slice(0, 4)} columns={4} />
         </div>

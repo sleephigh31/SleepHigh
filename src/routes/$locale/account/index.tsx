@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useHref } from "@/lib/locale";
+import { useHref, useT, useFormatters } from "@/lib/locale";
 import { useStore } from "@/lib/store";
 import { Package } from "lucide-react";
 import { AccountLayout } from "@/components/account/AccountLayout";
@@ -11,6 +11,8 @@ export const Route = createFileRoute("/$locale/account/")({
 function AccountDashboardPage() {
   const { orders } = useStore();
   const href = useHref();
+  const t = useT();
+  const { price } = useFormatters();
 
   const recentOrders = orders.slice(0, 3);
   const totalSpent = orders.reduce((sum, order) => sum + order.total, 0);
@@ -20,14 +22,14 @@ function AccountDashboardPage() {
       <div className="space-y-6">
         <div className="grid sm:grid-cols-2 gap-4">
           <div className="rounded-3xl border border-border bg-card p-6 shadow-sm flex flex-col justify-center">
-            <p className="text-sm text-muted-foreground font-bold mb-1">إجمالي الطلبات</p>
+             <p className="text-sm text-muted-foreground font-bold mb-1">{t("account.totalOrders")}</p>
             <p className="text-3xl font-black text-brand">{orders.length}</p>
           </div>
           <div className="rounded-3xl border border-border bg-card p-6 shadow-sm flex flex-col justify-center">
-            <p className="text-sm text-muted-foreground font-bold mb-1">إجمالي المشتريات</p>
-            <p className="text-3xl font-black text-brand">
-              {totalSpent.toLocaleString("ar-EG")} ج.م
-            </p>
+             <p className="text-sm text-muted-foreground font-bold mb-1">{t("account.totalSpent")}</p>
+             <p className="text-3xl font-black text-brand">
+               {price(totalSpent)}
+             </p>
           </div>
         </div>
 
@@ -35,7 +37,7 @@ function AccountDashboardPage() {
           <div className="flex items-center justify-between border-b border-border pb-4">
             <h3 className="text-lg font-bold flex items-center gap-2">
               <Package className="h-5 w-5 text-brand" />
-              <span>أحدث الطلبات</span>
+               <span>{t("account.recentOrders")}</span>
             </h3>
             {orders.length > 0 && (
               <Link
@@ -50,7 +52,7 @@ function AccountDashboardPage() {
           {orders.length === 0 ? (
             <div className="text-center py-12 space-y-4">
               <Package className="h-12 w-12 text-muted-foreground/30 mx-auto" />
-              <p className="font-bold text-muted-foreground">لم تقم بإجراء أي طلبات حتى الآن.</p>
+               <p className="font-bold text-muted-foreground">{t("account.noOrdersYet")}</p>
               <Link
                 to={href("/collections")}
                 className="inline-block mt-4 rounded-xl bg-brand px-6 py-2 font-bold text-brand-foreground hover:bg-brand-hover"

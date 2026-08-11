@@ -1,4 +1,5 @@
 import { Moon } from "lucide-react";
+import { useT } from "@/lib/locale";
 
 interface SleepHighLoaderProps {
   fullScreen?: boolean;
@@ -10,9 +11,11 @@ interface SleepHighLoaderProps {
 export function SleepHighLoader({
   fullScreen = false,
   size = "md",
-  label = "جاري التحميل...",
+  label,
   className = "",
 }: SleepHighLoaderProps) {
+  const t = useT();
+  const loaderLabel = label || t("common.loading");
   const logoSizes = {
     sm: "h-6 w-auto",
     md: "h-10 w-auto",
@@ -48,11 +51,11 @@ export function SleepHighLoader({
       </div>
 
       {/* Calm label */}
-      {label && (
-        <p className="text-xs md:text-sm font-bold text-gray-600 tracking-tight animate-pulse">
-          {label}
-        </p>
-      )}
+           {loaderLabel && (
+         <p className="text-xs md:text-sm font-bold text-gray-600 tracking-tight animate-pulse">
+           {loaderLabel}
+         </p>
+       )}
     </div>
   );
 

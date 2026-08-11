@@ -1,5 +1,5 @@
 import { findVariantByOptions } from "@/lib/services/catalog";
-import { useLocalized } from "@/lib/locale";
+import { useLocalized, useT } from "@/lib/locale";
 import type { Product, VariantOptionValues } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -15,6 +15,7 @@ export function ProductOptions({
   compact?: boolean;
 }) {
   const L = useLocalized();
+  const t = useT();
 
   const isValueAvailable = (key: string, value: string) => {
     const candidate = { ...selection, [key]: value };
@@ -43,7 +44,7 @@ export function ProductOptions({
                   const available = isValueAvailable(option.key, value.value);
                   return (
                     <option key={value.value} value={value.value} disabled={!available}>
-                      {L(value.label)} {available ? "" : "(غير متوفر)"}
+                       {L(value.label)} {available ? "" : t("product.unavailableOption")}
                     </option>
                   );
                 })}

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useHref } from "@/lib/locale";
+import { useHref, useT } from "@/lib/locale";
 import { RotateCcw, Home, ChevronDown } from "lucide-react";
 
 export const Route = createFileRoute("/$locale/returns")({
@@ -8,6 +8,7 @@ export const Route = createFileRoute("/$locale/returns")({
 
 function ReturnPolicyPage() {
   const href = useHref();
+  const t = useT();
 
   return (
     <div dir="rtl" className="min-h-screen bg-background text-foreground">
@@ -22,10 +23,10 @@ function ReturnPolicyPage() {
               className="hover:text-white transition-colors flex items-center gap-1"
             >
               <Home className="h-3.5 w-3.5" />
-              <span>الرئيسية</span>
+               <span>{t("common.home")}</span>
             </Link>
             <ChevronDown className="h-3 w-3 rotate-90" />
-            <span className="text-white font-medium">سياسة الإرجاع والاستبدال</span>
+             <span className="text-white font-medium">{t("returns.title")}</span>
           </nav>
           <div className="flex items-center gap-3 mb-4">
             <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
@@ -42,11 +43,10 @@ function ReturnPolicyPage() {
         <div className="prose-policy space-y-10">
           {/* Highlight Box */}
           <div className="bg-brand-soft border border-brand/15 rounded-2xl p-6 md:p-8">
-            <p className="text-brand font-bold text-base mb-2">ضمان رضاك هو أولويتنا</p>
-            <p className="text-foreground/80 text-sm leading-relaxed">
-              في سليب هاي، نسعى لتقديم أفضل المنتجات. إذا لم تكن راضياً عن منتجك، نوفر لك خيارات
-              مرنة للإرجاع والاستبدال لضمان تجربة تسوق مريحة.
-            </p>
+             <p className="text-brand font-bold text-base mb-2">{t("returns.highlightTitle")}</p>
+             <p className="text-foreground/80 text-sm leading-relaxed">
+               {t("returns.highlightText")}
+             </p>
           </div>
 
           <section>
@@ -60,23 +60,21 @@ function ReturnPolicyPage() {
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
                 <span>
-                  يمكنك إرجاع المنتج خلال <strong className="text-foreground">14 يوماً</strong> من
-                  تاريخ الاستلام.
+                   يمكنك إرجاع المنتج خلال <strong className="text-foreground">{t("returns.s1Item1Days")}</strong> من
+                   تاريخ الاستلام.
                 </span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
-                <span>يجب أن يكون المنتج في حالته الأصلية وغير مستخدم وبتغليفه الأصلي.</span>
+                 <span>{t("returns.s1Item2")}</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
-                <span>يجب تقديم فاتورة الشراء أو رقم الطلب عند طلب الإرجاع.</span>
+                 <span>{t("returns.s1Item3")}</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
-                <span>
-                  المنتجات المفصّلة حسب الطلب لا يمكن إرجاعها إلا في حالة وجود عيب تصنيعي.
-                </span>
+                 <span>{t("returns.s1Item4")}</span>
               </li>
             </ul>
           </section>
@@ -91,18 +89,18 @@ function ReturnPolicyPage() {
             <ul className="space-y-2 text-muted-foreground text-sm">
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
-                <span>يمكنك استبدال المنتج بمنتج آخر بنفس القيمة أو بفارق السعر.</span>
+                 <span>{t("returns.s2Item1")}</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
                 <span>
-                  يتم الاستبدال خلال <strong className="text-foreground">14 يوماً</strong> من تاريخ
-                  الاستلام.
+                   يتم الاستبدال خلال <strong className="text-foreground">{t("returns.s2Item2End")}</strong> من تاريخ
+                   الاستلام.
                 </span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
-                <span>يجب أن يكون المنتج في حالته الأصلية وبتغليفه الكامل.</span>
+                 <span>{t("returns.s2Item3")}</span>
               </li>
             </ul>
           </section>
@@ -117,15 +115,15 @@ function ReturnPolicyPage() {
             <ul className="space-y-2 text-muted-foreground text-sm">
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
-                <span>المنتجات المستخدمة أو التالفة بسبب سوء الاستخدام.</span>
+                 <span>{t("returns.s3Item1")}</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
-                <span>المنتجات التي تم إزالة بطاقات التعريف أو الملصقات منها.</span>
+                 <span>{t("returns.s3Item2")}</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
-                <span>المنتجات المشتراة بخصومات خاصة (ما لم تكن معيبة).</span>
+                 <span>{t("returns.s3Item3")}</span>
               </li>
             </ul>
           </section>
@@ -142,28 +140,28 @@ function ReturnPolicyPage() {
                 <div className="w-10 h-10 rounded-xl bg-brand/10 text-brand font-black text-lg flex items-center justify-center mx-auto mb-3">
                   1
                 </div>
-                <p className="text-sm font-bold text-foreground mb-1">تواصل معنا</p>
-                <p className="text-xs text-muted-foreground">
-                  اتصل بخدمة العملاء أو أرسل طلب عبر صفحة الاتصال
-                </p>
+                 <p className="text-sm font-bold text-foreground mb-1">{t("returns.step1Title")}</p>
+                 <p className="text-xs text-muted-foreground">
+                   {t("returns.step1Text")}
+                 </p>
               </div>
               <div className="bg-surface-secondary rounded-2xl p-5 text-center">
                 <div className="w-10 h-10 rounded-xl bg-brand/10 text-brand font-black text-lg flex items-center justify-center mx-auto mb-3">
                   2
                 </div>
-                <p className="text-sm font-bold text-foreground mb-1">موافقة الإرجاع</p>
-                <p className="text-xs text-muted-foreground">
-                  سنراجع طلبك ونؤكد الموافقة خلال 24 ساعة
-                </p>
+                 <p className="text-sm font-bold text-foreground mb-1">{t("returns.step2Title")}</p>
+                 <p className="text-xs text-muted-foreground">
+                   {t("returns.step2Text")}
+                 </p>
               </div>
               <div className="bg-surface-secondary rounded-2xl p-5 text-center">
                 <div className="w-10 h-10 rounded-xl bg-brand/10 text-brand font-black text-lg flex items-center justify-center mx-auto mb-3">
                   3
                 </div>
-                <p className="text-sm font-bold text-foreground mb-1">استرداد المبلغ</p>
-                <p className="text-xs text-muted-foreground">
-                  يتم رد المبلغ خلال 7-14 يوم عمل بعد استلام المنتج
-                </p>
+                 <p className="text-sm font-bold text-foreground mb-1">{t("returns.step3Title")}</p>
+                 <p className="text-xs text-muted-foreground">
+                   {t("returns.step3Text")}
+                 </p>
               </div>
             </div>
           </section>
@@ -176,10 +174,10 @@ function ReturnPolicyPage() {
               الضمان
             </h2>
             <p className="text-muted-foreground leading-relaxed text-sm">
-              جميع مراتب سليب هاي مشمولة بضمان يصل إلى{" "}
-              <strong className="text-foreground">10 سنوات</strong> ضد عيوب التصنيع. يشمل الضمان
-              التهدل الزائد وانكسار السوست. لا يشمل الضمان الأضرار الناتجة عن سوء الاستخدام أو
-              البقع.
+               جميع مراتب سليب هاي مشمولة بضمان يصل إلى{" "}
+               <strong className="text-foreground">{t("returns.s5Years")}</strong>{" "}
+               {t("returns.s5TextStart")}
+               {t("returns.s5TextEnd")}
             </p>
           </section>
 
@@ -191,11 +189,11 @@ function ReturnPolicyPage() {
               تواصل معنا
             </h2>
             <p className="text-muted-foreground leading-relaxed text-sm">
-              لطلب إرجاع أو استبدال، تواصل معنا عبر{" "}
-              <Link to={href("/contact")} className="text-brand font-bold hover:underline">
-                صفحة الاتصال
-              </Link>{" "}
-              أو اتصل بخدمة العملاء على الرقم: 01207864015
+               {t("returns.s6Text")}{" "}
+               <Link to={href("/contact")} className="text-brand font-bold hover:underline">
+                 {t("policy.contactLink")}
+               </Link>{" "}
+               {t("returns.s6TextEnd")} 01207864015
             </p>
           </section>
         </div>

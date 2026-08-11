@@ -13,6 +13,7 @@ import {
 import { getSettings } from "@/lib/services/firebase/settingsService";
 import { submitSiteMessage } from "@/lib/services/firebase/messageService";
 import type { StoreSettings } from "@/lib/types";
+import { useT, useFormatters } from "@/lib/locale";
 
 const TikTokIcon = () => (
   <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
@@ -36,6 +37,8 @@ function ContactPage() {
     subject: "",
     message: "",
   });
+  const t = useT();
+  const { price } = useFormatters();
 
   useEffect(() => {
     async function loadSettings() {
@@ -50,12 +53,12 @@ function ContactPage() {
     setErrorMessage("");
 
     if (!formData.name.trim() || !formData.phone.trim() || !formData.message.trim()) {
-      setErrorMessage("يرجى ملء جميع الحقول المطلوبة.");
+      setErrorMessage(t("contact.formMissing"));
       return;
     }
 
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      setErrorMessage("يرجى إدخال بريد إلكتروني صحيح.");
+      setErrorMessage(t("contact.formInvalidEmail"));
       return;
     }
 
@@ -72,7 +75,7 @@ function ContactPage() {
     if (res.ok) {
       setSubmitted(true);
     } else {
-      setErrorMessage("حدث خطأ أثناء إرسال الرسالة. يرجى المحاولة لاحقاً.");
+      setErrorMessage(t("contact.formFailed"));
     }
   };
 
@@ -90,15 +93,14 @@ function ContactPage() {
       <div className="text-center space-y-3.5 max-w-2xl mx-auto px-4">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-[#fde8ea] px-4 py-1.5 text-xs font-bold text-[#C8102E] shadow-2xs">
           <MessageSquare className="h-3.5 w-3.5" />
-          <span>خدمة عملاء سليب هاي مصر</span>
+          <span>{t("contact.badge")}</span>
         </span>
-        <h1 className="text-2xl md:text-4xl font-extrabold text-gray-900 tracking-tight leading-tight">
-          تواصل معنا — نحن هنا لمساعدتك
-        </h1>
-        <p className="text-xs md:text-sm text-gray-600 leading-relaxed font-medium">
-          سواء كنت تبحث عن استشارة لاختيار المرتبة والوسادة المناسبة، أو للاستفسار عن الطلبات
-          والفروع، فريق سليب هاي متواجد لخدمتك.
-        </p>
+         <h1 className="text-2xl md:text-4xl font-extrabold text-gray-900 tracking-tight leading-tight">
+           {t("contact.title")}
+         </h1>
+         <p className="text-xs md:text-sm text-gray-600 leading-relaxed font-medium">
+           {t("contact.intro")}
+         </p>
       </div>
 
       <div className="grid gap-8 lg:grid-cols-12 items-start">
@@ -106,7 +108,7 @@ function ContactPage() {
         <div className="lg:col-span-5 space-y-6">
           <div className="bg-white p-6 md:p-8 rounded-3xl border border-gray-200 shadow-xs space-y-6">
             <h2 className="font-extrabold text-lg text-gray-900 border-b border-gray-100 pb-3.5 flex items-center justify-between">
-              <span>معلومات الاتصال والفروع</span>
+               <span>{t("contact.infoTitle")}</span>
               <span className="text-xs font-bold text-[#C8102E] bg-red-50 px-2.5 py-1 rounded-full">
                 Sleep High
               </span>
@@ -114,15 +116,15 @@ function ContactPage() {
 
             {/* BRANCHES LIST */}
             <div className="space-y-4">
-              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                فروعنا المعتمدة
-              </h3>
+               <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                 {t("contact.branchesTitle")}
+               </h3>
 
               {/* Branch 1 */}
               <div className="p-4 rounded-2xl bg-[#faf8f5] border border-gray-100 space-y-1.5 transition-all hover:border-red-200">
                 <div className="flex items-center space-x-2 space-x-reverse text-[#C8102E]">
                   <MapPin className="h-4 w-4 shrink-0" />
-                  <span className="font-bold text-xs text-gray-900">فرع أول:</span>
+                   <span className="font-bold text-xs text-gray-900">{t("contact.branch1")}</span>
                 </div>
                 <p className="text-xs text-gray-600 font-medium leading-relaxed pr-6">
                   {branch1Text}
@@ -133,7 +135,7 @@ function ContactPage() {
               <div className="p-4 rounded-2xl bg-[#faf8f5] border border-gray-100 space-y-1.5 transition-all hover:border-red-200">
                 <div className="flex items-center space-x-2 space-x-reverse text-[#C8102E]">
                   <MapPin className="h-4 w-4 shrink-0" />
-                  <span className="font-bold text-xs text-gray-900">فرع ثانٍ:</span>
+                   <span className="font-bold text-xs text-gray-900">{t("contact.branch2")}</span>
                 </div>
                 <p className="text-xs text-gray-600 font-medium leading-relaxed pr-6">
                   {branch2Text}
@@ -143,9 +145,9 @@ function ContactPage() {
 
             {/* PHONE NUMBERS (CLICKABLE TOUCH TARGETS FOR MOBILE) */}
             <div className="space-y-3 pt-2 border-t border-gray-100">
-              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                أرقام التواصل المباشر
-              </h3>
+               <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                 {t("contact.phonesTitle")}
+               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {/* Customer Service */}
@@ -153,7 +155,7 @@ function ContactPage() {
                   href={`tel:${csPhone}`}
                   className="flex flex-col p-3.5 rounded-2xl bg-white border border-gray-200 hover:border-[#C8102E] hover:bg-red-50/50 transition-all group"
                 >
-                  <span className="text-[11px] font-bold text-gray-500">خدمة العملاء</span>
+                   <span className="text-[11px] font-bold text-gray-500">{t("contact.customerService")}</span>
                   <div className="flex items-center justify-between mt-1">
                     <span
                       dir="ltr"
@@ -170,7 +172,7 @@ function ContactPage() {
                   href={`tel:${salesPhone}`}
                   className="flex flex-col p-3.5 rounded-2xl bg-white border border-gray-200 hover:border-[#C8102E] hover:bg-red-50/50 transition-all group"
                 >
-                  <span className="text-[11px] font-bold text-gray-500">قسم المبيعات</span>
+                   <span className="text-[11px] font-bold text-gray-500">{t("contact.sales")}</span>
                   <div className="flex items-center justify-between mt-1">
                     <span
                       dir="ltr"
@@ -186,9 +188,9 @@ function ContactPage() {
 
             {/* EMAIL & SOCIAL MEDIA */}
             <div className="space-y-3 pt-2 border-t border-gray-100">
-              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                البريد والتواصل الاجتماعي
-              </h3>
+               <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                 {t("contact.socialTitle")}
+               </h3>
 
               <a
                 href={`mailto:${emailAddr}`}
@@ -196,7 +198,7 @@ function ContactPage() {
               >
                 <div className="flex items-center space-x-2.5 space-x-reverse">
                   <Mail className="h-4 w-4 text-[#C8102E] shrink-0" />
-                  <span className="text-xs font-bold text-gray-900">البريد الإلكتروني</span>
+                   <span className="text-xs font-bold text-gray-900">{t("contact.email")}</span>
                 </div>
                 <span
                   dir="ltr"
@@ -214,7 +216,7 @@ function ContactPage() {
                   className="flex items-center justify-center space-x-2 space-x-reverse py-3 px-4 rounded-xl bg-black text-white hover:bg-gray-800 text-xs font-bold transition-all shadow-xs"
                 >
                   <TikTokIcon />
-                  <span>تيك توك</span>
+                   <span>{t("contact.tiktok")}</span>
                   <ExternalLink className="h-3 w-3 opacity-60" />
                 </a>
 
@@ -227,7 +229,7 @@ function ContactPage() {
                   <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
                     <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
                   </svg>
-                  <span>فيسبوك</span>
+                   <span>{t("contact.facebook")}</span>
                   <ExternalLink className="h-3 w-3 opacity-60" />
                 </a>
               </div>
@@ -237,9 +239,9 @@ function ContactPage() {
 
         {/* CONTACT FORM */}
         <div className="lg:col-span-7 bg-white p-6 md:p-8 rounded-3xl border border-gray-200 shadow-xs space-y-6">
-          <h2 className="font-extrabold text-lg text-gray-900 border-b border-gray-100 pb-3.5">
-            أرسل لنا رسالة مباشرة
-          </h2>
+           <h2 className="font-extrabold text-lg text-gray-900 border-b border-gray-100 pb-3.5">
+             {t("contact.formTitle")}
+           </h2>
 
           {errorMessage && (
             <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs font-bold text-[#C8102E]">
@@ -253,10 +255,10 @@ function ContactPage() {
                 <CheckCircle2 className="h-10 w-10" />
               </div>
               <div className="space-y-1">
-                <h3 className="font-extrabold text-xl text-gray-900">تم إرسال رسالتك بنجاح!</h3>
-                <p className="text-xs md:text-sm text-gray-600">
-                  نشكر تواصلك مع سليب هاي. سيتواصل معك أحد ممثلي خدمة العملاء في أقرب وقت.
-                </p>
+                 <h3 className="font-extrabold text-xl text-gray-900">{t("contact.successTitle")}</h3>
+                 <p className="text-xs md:text-sm text-gray-600">
+                   {t("contact.successText")}
+                 </p>
               </div>
               <button
                 onClick={() => {
@@ -265,16 +267,16 @@ function ContactPage() {
                 }}
                 className="mt-4 px-6 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-xs font-bold text-gray-800 transition-colors"
               >
-                إرسال رسالة أخرى
+                 {t("contact.sendAnother")}
               </button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4 text-xs md:text-sm">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="font-bold text-gray-800 block">
-                    الاسم بالكامل <span className="text-[#C8102E]">*</span>
-                  </label>
+                   <label className="font-bold text-gray-800 block">
+                     {t("contact.formName")} <span className="text-[#C8102E]">*</span>
+                   </label>
                   <input
                     required
                     type="text"
@@ -286,9 +288,9 @@ function ContactPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="font-bold text-gray-800 block">
-                    رقم الهاتف <span className="text-[#C8102E]">*</span>
-                  </label>
+                   <label className="font-bold text-gray-800 block">
+                     {t("contact.formPhone")} <span className="text-[#C8102E]">*</span>
+                   </label>
                   <input
                     required
                     type="tel"
@@ -302,9 +304,9 @@ function ContactPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="font-bold text-gray-800 block">
-                    البريد الإلكتروني (اختياري)
-                  </label>
+                   <label className="font-bold text-gray-800 block">
+                     {t("contact.formEmail")}
+                   </label>
                   <input
                     type="email"
                     value={formData.email}
@@ -315,7 +317,7 @@ function ContactPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="font-bold text-gray-800 block">موضوع الرسالة (اختياري)</label>
+                   <label className="font-bold text-gray-800 block">{t("contact.formSubject")}</label>
                   <input
                     type="text"
                     value={formData.subject}
@@ -327,9 +329,9 @@ function ContactPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="font-bold text-gray-800 block">
-                  تفاصيل الرسالة أو الاستفسار <span className="text-[#C8102E]">*</span>
-                </label>
+                   <label className="font-bold text-gray-800 block">
+                     {t("contact.formMessage")} <span className="text-[#C8102E]">*</span>
+                   </label>
                 <textarea
                   required
                   rows={5}
@@ -345,17 +347,17 @@ function ContactPage() {
                 disabled={submitting}
                 className="w-full py-4 px-6 rounded-2xl bg-[#C8102E] hover:bg-red-700 font-extrabold text-sm text-white flex items-center justify-center space-x-2 space-x-reverse transition-all shadow-md disabled:opacity-60 min-h-[48px]"
               >
-                {submitting ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>جاري إرسال الرسالة...</span>
-                  </>
-                ) : (
-                  <>
-                    <Send className="h-4 w-4" />
-                    <span>إرسال الرسالة إلى سليب هاي</span>
-                  </>
-                )}
+                   {submitting ? (
+                     <>
+                       <Loader2 className="h-4 w-4 animate-spin" />
+                       <span>{t("contact.formSubmitting")}</span>
+                     </>
+                   ) : (
+                     <>
+                       <Send className="h-4 w-4" />
+                       <span>{t("contact.formSubmit")}</span>
+                     </>
+                   )}
               </button>
             </form>
           )}

@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useStore } from "@/lib/store";
 import { MapPin, Save, CheckCircle, AlertCircle } from "lucide-react";
 import { AccountLayout } from "@/components/account/AccountLayout";
+import { useT, useFormatters } from "@/lib/locale";
 import type { Address } from "@/lib/types";
 
 export const Route = createFileRoute("/$locale/account/addresses")({
@@ -11,6 +12,8 @@ export const Route = createFileRoute("/$locale/account/addresses")({
 
 function AddressesPage() {
   const { user, updateProfile } = useStore();
+  const t = useT();
+  const { price } = useFormatters();
 
   const [address, setAddress] = useState<Omit<Address, "fullName" | "phone" | "email">>({
     governorate: user?.defaultAddress?.governorate ?? "",
@@ -26,7 +29,7 @@ function AddressesPage() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!address.governorate || !address.city || !address.street) {
-      setError("يرجى إكمال الحقول المطلوبة: المحافظة، المدينة، الشارع.");
+      setError(t("addresses.missingFields"));
       return;
     }
     setSaving(true);
@@ -43,7 +46,7 @@ function AddressesPage() {
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch {
-      setError("حدث خطأ أثناء الحفظ. يرجى المحاولة مجدداً.");
+      setError(t("addresses.saveFailed"));
     } finally {
       setSaving(false);
     }
@@ -52,19 +55,19 @@ function AddressesPage() {
   return (
     <AccountLayout activeTab="addresses">
       <div className="space-y-6">
-        <h2 className="text-xl font-bold border-b border-border pb-4 flex items-center gap-2">
-          <MapPin className="h-5 w-5 text-brand" />
-          عناويني
-        </h2>
+         <h2 className="text-xl font-bold border-b border-border pb-4 flex items-center gap-2">
+           <MapPin className="h-5 w-5 text-brand" />
+           {t("addresses.title")}
+         </h2>
 
-        <p className="text-sm text-muted-foreground">
-          احفظ عنوانك الافتراضي ليتم ملء بيانات الشحن تلقائياً عند إتمام الشراء.
-        </p>
+         <p className="text-sm text-muted-foreground">
+           {t("addresses.intro")}
+         </p>
 
         {success && (
           <div className="flex items-center gap-3 rounded-xl bg-green-500/10 border border-green-500/30 p-4 text-green-700 dark:text-green-400 text-sm font-bold">
             <CheckCircle className="h-5 w-5 shrink-0" />
-            تم حفظ العنوان بنجاح!
+             {t("addresses.saved")}
           </div>
         )}
 
@@ -81,55 +84,55 @@ function AddressesPage() {
         >
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-sm font-bold text-foreground">
-                المحافظة <span className="text-destructive">*</span>
-              </label>
+               <label className="text-sm font-bold text-foreground">
+                 {t("checkout.governorate")} <span className="text-destructive">*</span>
+               </label>
               <input
                 type="text"
                 required
                 value={address.governorate}
                 onChange={(e) => setAddress({ ...address, governorate: e.target.value })}
                 className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand/40 transition"
-                placeholder="القاهرة"
+                 placeholder={t("checkout.governoratePlaceholder")}
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm font-bold text-foreground">
-                المدينة / المنطقة <span className="text-destructive">*</span>
-              </label>
+               <label className="text-sm font-bold text-foreground">
+                 {t("checkout.city")} <span className="text-destructive">*</span>
+               </label>
               <input
                 type="text"
                 required
                 value={address.city}
                 onChange={(e) => setAddress({ ...address, city: e.target.value })}
                 className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand/40 transition"
-                placeholder="مدينة نصر"
+                 placeholder={t("checkout.cityPlaceholder")}
               />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-bold text-foreground">
-              الشارع ورقم المبنى <span className="text-destructive">*</span>
-            </label>
+               <label className="text-sm font-bold text-foreground">
+                 {t("checkout.street")} <span className="text-destructive">*</span>
+               </label>
             <input
               type="text"
               required
               value={address.street}
               onChange={(e) => setAddress({ ...address, street: e.target.value })}
               className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand/40 transition"
-              placeholder="12 شارع النزهة، الدور 3 شقة 5"
+                 placeholder={t("checkout.streetPlaceholder")}
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-bold text-foreground">ملاحظات إضافية (اختياري)</label>
+             <label className="text-sm font-bold text-foreground">{t("addresses.notesLabel")}</label>
             <textarea
               value={address.notes ?? ""}
               onChange={(e) => setAddress({ ...address, notes: e.target.value })}
               rows={3}
               className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-brand/40 transition"
-              placeholder="علامة مميزة أو موعد مفضل للتوصيل..."
+               placeholder={t("checkout.notesPlaceholder")}
             />
           </div>
 
@@ -140,14 +143,14 @@ function AddressesPage() {
               className="flex items-center gap-2 rounded-xl bg-brand px-6 py-3 font-bold text-brand-foreground hover:bg-brand-hover transition-colors disabled:opacity-60 text-sm"
             >
               <Save className="h-4 w-4" />
-              {saving ? "جاري الحفظ..." : "حفظ العنوان"}
+               {saving ? t("common.saving") : t("addresses.saveButton")}
             </button>
           </div>
         </form>
 
         {user?.defaultAddress && (
           <div className="rounded-2xl border border-border bg-muted/20 p-5 space-y-2">
-            <p className="text-sm font-bold text-muted-foreground mb-3">العنوان المحفوظ حالياً</p>
+             <p className="text-sm font-bold text-muted-foreground mb-3">{t("addresses.currentTitle")}</p>
             <div className="flex items-start gap-3">
               <MapPin className="h-4 w-4 text-brand mt-0.5 shrink-0" />
               <div className="space-y-0.5">

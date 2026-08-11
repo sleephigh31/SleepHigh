@@ -48,14 +48,14 @@ export function Footer() {
             <div className="bg-white p-2.5 rounded-2xl inline-block shadow-lg shadow-black/20">
               <img
                 src="https://sleephigh-eg.myshopify.com/cdn/shop/files/h_logo_250x.png?v=1697100417"
-                alt="سليب هاي SLEEP HIGH"
+                 alt={t("brand.logoAlt")}
                 className="h-11 w-auto object-contain"
               />
             </div>
             <p className="text-slate-400 leading-relaxed text-xs font-medium">
               {locale === "ar"
                 ? settings?.descriptionAr ||
-                  "سليب هاي هي العلامة التجارية المصرية الأولى المتخصصة في إنتاج وتفصيل المراتب الطبية والوسائد المصنعة وفق مواصفات النوم الفندقي الفاخر."
+                  t("brand.description")
                 : settings?.descriptionEn ||
                   "SleepHigh is Egypt's leading bedding brand specializing in medical mattresses, luxury pillows, and hotel-grade sleep accessories."}
             </p>
@@ -86,7 +86,7 @@ export function Footer() {
           {/* COL 2: CONTACT */}
           <div className="space-y-4">
             <h4 className="font-black text-sm text-white tracking-tight relative inline-block pb-2.5 after:content-[''] after:absolute after:bottom-0 after:start-0 after:h-[2px] after:w-8 after:bg-[#C8102E]">
-              {locale === "ar" ? "تواصل معنا" : "Get in touch"}
+              {t("footer.contact")}
             </h4>
 
             <div className="space-y-3">
@@ -97,7 +97,7 @@ export function Footer() {
                 </div>
                 <div>
                   <p className="text-[10px] font-black text-white/50 uppercase tracking-widest mb-0.5">
-                    {locale === "ar" ? "فرع أول" : "Branch 1"}
+                     {t("footer.branch1")}
                   </p>
                   <p className="text-slate-400 font-medium leading-relaxed text-[11px]">
                     {branch1Text}
@@ -112,7 +112,7 @@ export function Footer() {
                 </div>
                 <div>
                   <p className="text-[10px] font-black text-white/50 uppercase tracking-widest mb-0.5">
-                    {locale === "ar" ? "فرع ثانٍ" : "Branch 2"}
+                     {t("footer.branch2")}
                   </p>
                   <p className="text-slate-400 font-medium leading-relaxed text-[11px]">
                     {branch2Text}
@@ -129,7 +129,7 @@ export function Footer() {
                   </div>
                   <div>
                     <p className="text-[10px] font-black text-white/50 uppercase tracking-widest">
-                      {locale === "ar" ? "خدمة العملاء" : "Customer Service"}
+                      {t("footer.customerService")}
                     </p>
                     <p
                       dir="ltr"
@@ -147,7 +147,7 @@ export function Footer() {
                   </div>
                   <div>
                     <p className="text-[10px] font-black text-white/50 uppercase tracking-widest">
-                      {locale === "ar" ? "المبيعات" : "Sales"}
+                      {t("footer.sales")}
                     </p>
                     <p
                       dir="ltr"
@@ -165,7 +165,7 @@ export function Footer() {
                   </div>
                   <div>
                     <p className="text-[10px] font-black text-white/50 uppercase tracking-widest">
-                      {locale === "ar" ? "البريد الإلكتروني" : "Email"}
+                      {t("footer.email")}
                     </p>
                     <p
                       dir="ltr"
@@ -244,7 +244,7 @@ export function Footer() {
             {/* Policy Links */}
             <div className="border-t border-white/5 pt-4 mt-4">
               <h5 className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-3">
-                {locale === "ar" ? "الشروط والسياسات" : "Legal"}
+                {t("footer.legal")}
               </h5>
               <ul className="space-y-2 text-slate-500 font-bold text-[11px]">
                 <li>
@@ -253,7 +253,7 @@ export function Footer() {
                     className="group hover:text-slate-300 transition-colors flex items-center gap-1.5"
                   >
                     <ArrowIcon className="h-3 w-3 text-[#C8102E]/60 transition-transform duration-200 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
-                    <span>{locale === "ar" ? "سياسة الخصوصية" : "Privacy Policy"}</span>
+                     <span>{t("footer.privacy")}</span>
                   </Link>
                 </li>
                 <li>
@@ -262,7 +262,7 @@ export function Footer() {
                     className="group hover:text-slate-300 transition-colors flex items-center gap-1.5"
                   >
                     <ArrowIcon className="h-3 w-3 text-[#C8102E]/60 transition-transform duration-200 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
-                    <span>{locale === "ar" ? "اتفاقية الاستخدام" : "Terms of Use"}</span>
+                     <span>{t("footer.terms")}</span>
                   </Link>
                 </li>
                 <li>
@@ -271,7 +271,7 @@ export function Footer() {
                     className="group hover:text-slate-300 transition-colors flex items-center gap-1.5"
                   >
                     <ArrowIcon className="h-3 w-3 text-[#C8102E]/60 transition-transform duration-200 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
-                    <span>{locale === "ar" ? "سياسة الإرجاع" : "Return Policy"}</span>
+                     <span>{t("footer.returns")}</span>
                   </Link>
                 </li>
               </ul>
@@ -283,16 +283,14 @@ export function Footer() {
         <div className="border-t border-white/5 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] text-slate-500 font-semibold">
           <p>
             © {new Date().getFullYear()}{" "}
-            {locale === "ar"
-              ? "سليب هاي (SleepHigh Egyptian Bedding System). جميع الحقوق محفوظة."
-              : "SleepHigh Egyptian Bedding System. All rights reserved."}
+             {locale === "ar"
+               ? `© ${new Date().getFullYear()} ${t("brand.name")}. ${t("footer.rights")}.`
+               : `© ${new Date().getFullYear()} ${t("brand.name")}. ${t("footer.rights")}.`}
           </p>
           <div className="flex items-center gap-2 rounded-full bg-white/[0.03] ring-1 ring-white/10 px-3.5 py-2 text-slate-400">
             <CreditCard className="h-4 w-4 text-[#C8102E]" />
             <span>
-              {locale === "ar"
-                ? "فودافون كاش · بطاقات الائتمان · الدفع عند الاستلام"
-                : "E-Wallets · Cards · Cash on Delivery"}
+               {t("footer.payments")}
             </span>
           </div>
         </div>

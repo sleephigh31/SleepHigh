@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useHref } from "@/lib/locale";
+import { useHref, useT } from "@/lib/locale";
 import { Shield, Home, ChevronDown } from "lucide-react";
 
 export const Route = createFileRoute("/$locale/privacy")({
@@ -8,6 +8,7 @@ export const Route = createFileRoute("/$locale/privacy")({
 
 function PrivacyPolicyPage() {
   const href = useHref();
+  const t = useT();
 
   return (
     <div dir="rtl" className="min-h-screen bg-background text-foreground">
@@ -22,10 +23,10 @@ function PrivacyPolicyPage() {
               className="hover:text-white transition-colors flex items-center gap-1"
             >
               <Home className="h-3.5 w-3.5" />
-              <span>الرئيسية</span>
+               <span>{t("common.home")}</span>
             </Link>
             <ChevronDown className="h-3 w-3 rotate-90" />
-            <span className="text-white font-medium">سياسة الخصوصية</span>
+             <span className="text-white font-medium">{t("privacy.title")}</span>
           </nav>
           <div className="flex items-center gap-3 mb-4">
             <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
@@ -48,9 +49,7 @@ function PrivacyPolicyPage() {
               مقدمة
             </h2>
             <p className="text-muted-foreground leading-relaxed text-sm">
-              نحن في سليب هاي (SleepHigh) نقدّر خصوصيتك ونلتزم بحماية بياناتك الشخصية. توضح هذه
-              السياسة كيفية جمع واستخدام وحماية المعلومات التي تقدمها لنا عند استخدام موقعنا
-              الإلكتروني أو خدماتنا.
+             {t("privacy.s1Text")}
             </p>
           </section>
 
@@ -64,31 +63,19 @@ function PrivacyPolicyPage() {
             <ul className="space-y-2 text-muted-foreground text-sm">
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
-                <span>
-                  <strong className="text-foreground">معلومات الحساب:</strong> الاسم، البريد
-                  الإلكتروني، رقم الهاتف عند إنشاء حساب.
-                </span>
+                 <span>{t("privacy.s2Item1Label")} {t("privacy.s2Item1")}</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
-                <span>
-                  <strong className="text-foreground">معلومات الطلب:</strong> عنوان التوصيل، تفاصيل
-                  الدفع، وتاريخ الطلبات.
-                </span>
+                 <span>{t("privacy.s2Item2Label")} {t("privacy.s2Item2")}</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
-                <span>
-                  <strong className="text-foreground">معلومات التصفح:</strong> نوع المتصفح، عنوان
-                  IP، الصفحات التي تمت زيارتها.
-                </span>
+                 <span>{t("privacy.s2Item3Label")} {t("privacy.s2Item3")}</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
-                <span>
-                  <strong className="text-foreground">معلومات التواصل:</strong> الرسائل والاستفسارات
-                  المرسلة عبر نموذج الاتصال.
-                </span>
+                 <span>{t("privacy.s2Item4Label")} {t("privacy.s2Item4")}</span>
               </li>
             </ul>
           </section>
@@ -103,19 +90,19 @@ function PrivacyPolicyPage() {
             <ul className="space-y-2 text-muted-foreground text-sm">
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
-                <span>معالجة وتوصيل طلباتك.</span>
+                 <span>{t("privacy.s3Item1")}</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
-                <span>التواصل معك بشأن طلباتك وتقديم خدمة العملاء.</span>
+                 <span>{t("privacy.s3Item2")}</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
-                <span>تحسين تجربة التسوق وتخصيص المحتوى.</span>
+                 <span>{t("privacy.s3Item3")}</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
-                <span>إرسال العروض الترويجية (بموافقتك فقط).</span>
+                 <span>{t("privacy.s3Item4")}</span>
               </li>
             </ul>
           </section>
@@ -128,8 +115,7 @@ function PrivacyPolicyPage() {
               حماية المعلومات
             </h2>
             <p className="text-muted-foreground leading-relaxed text-sm">
-              نستخدم تقنيات تشفير متقدمة وإجراءات أمنية صارمة لحماية بياناتك الشخصية. لا نشارك أو
-              نبيع معلوماتك لأي أطراف خارجية إلا عند الضرورة لتنفيذ الطلبات (مثل شركات التوصيل).
+             {t("privacy.s4Text")}
             </p>
           </section>
 
@@ -143,15 +129,15 @@ function PrivacyPolicyPage() {
             <ul className="space-y-2 text-muted-foreground text-sm">
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
-                <span>الوصول إلى بياناتك الشخصية وتعديلها أو حذفها.</span>
+                 <span>{t("privacy.s5Item1")}</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
-                <span>إلغاء الاشتراك في الرسائل التسويقية في أي وقت.</span>
+                 <span>{t("privacy.s5Item2")}</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand mt-2 shrink-0" />
-                <span>طلب نسخة من بياناتك المخزنة لدينا.</span>
+                 <span>{t("privacy.s5Item3")}</span>
               </li>
             </ul>
           </section>
@@ -164,11 +150,11 @@ function PrivacyPolicyPage() {
               تواصل معنا
             </h2>
             <p className="text-muted-foreground leading-relaxed text-sm">
-              لأي استفسارات حول سياسة الخصوصية، يمكنك التواصل معنا عبر{" "}
-              <Link to={href("/contact")} className="text-brand font-bold hover:underline">
-                صفحة الاتصال
-              </Link>{" "}
-              أو البريد الإلكتروني: info@sleephigh-eg.com
+               {t("privacy.s6Text")}{" "}
+               <Link to={href("/contact")} className="text-brand font-bold hover:underline">
+                 {t("policy.contactLink")}
+               </Link>{" "}
+               {t("privacy.s6TextEnd")} info@sleephigh-eg.com
             </p>
           </section>
         </div>

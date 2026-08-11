@@ -7,7 +7,7 @@ import {
   getPageSize,
 } from "@/lib/services/firebase/productService";
 import { getCategory } from "@/lib/services/firebase/categoryService";
-import { useHref } from "@/lib/locale";
+import { useHref, useT, useDir, useLocalized } from "@/lib/locale";
 import { ChevronLeft, ChevronRight, Home, ChevronDown, SlidersHorizontal } from "lucide-react";
 import type { Category, CategoryHandle, Product, SortKey } from "@/lib/types";
 
@@ -68,14 +68,14 @@ function Pagination({
 
   return (
     <nav
-      aria-label="التنقل بين الصفحات"
+      aria-label={t("common.pagination")}
       className="flex items-center justify-center gap-1.5 pt-12 pb-4"
     >
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         className="flex items-center justify-center w-10 h-10 rounded-xl border border-border bg-surface text-foreground/70 hover:bg-brand hover:text-white hover:border-brand disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200"
-        aria-label="الصفحة السابقة"
+        aria-label={t("common.previousPage")}
       >
         <ChevronRight className="h-4 w-4" />
       </button>
@@ -108,7 +108,7 @@ function Pagination({
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         className="flex items-center justify-center w-10 h-10 rounded-xl border border-border bg-surface text-foreground/70 hover:bg-brand hover:text-white hover:border-brand disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200"
-        aria-label="الصفحة التالية"
+        aria-label={t("common.nextPage")}
       >
         <ChevronLeft className="h-4 w-4" />
       </button>
@@ -120,6 +120,9 @@ function Pagination({
 function StorefrontCategoryCollectionPage() {
   const href = useHref();
   const { category: categoryHandle } = useParams({ from: "/$locale/collections/$category" });
+  const t = useT();
+  const dir = useDir();
+  const L = useLocalized();
   const [category, setCategory] = useState<Category | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -170,7 +173,7 @@ function StorefrontCategoryCollectionPage() {
     "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=600&auto=format&fit=crop";
 
   return (
-    <div dir="rtl" className="min-h-screen bg-background text-foreground">
+    <div dir={dir === "rtl" ? "rtl" : "ltr"} className="min-h-screen bg-background text-foreground">
       {/* ── Category Hero ───────────────────────────────────── */}
       <section className="relative h-[280px] md:h-[360px] overflow-hidden">
         {/* Background Image */}
@@ -187,20 +190,20 @@ function StorefrontCategoryCollectionPage() {
         {/* Content */}
         <div className="relative z-10 h-full flex flex-col justify-end max-w-[1400px] mx-auto px-5 md:px-8 pb-8 md:pb-12">
           {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-white/60 text-sm mb-4" aria-label="التنقل">
+          <nav className="flex items-center gap-2 text-white/60 text-sm mb-4" aria-label={t("common.breadcrumb")}>
             <Link
               to={href("/")}
               className="hover:text-white transition-colors flex items-center gap-1"
             >
               <Home className="h-3.5 w-3.5" />
-              <span>الرئيسية</span>
+               <span>{t("common.home")}</span>
             </Link>
             <ChevronDown className="h-3 w-3 rotate-90" />
             <Link to={href("/collections")} className="hover:text-white transition-colors">
-              الأقسام
+               <span>{t("collection.sections")}</span>
             </Link>
             <ChevronDown className="h-3 w-3 rotate-90" />
-            <span className="text-white font-medium">{category?.name.ar || categoryHandle}</span>
+             <span className="text-white font-medium">{L(category?.name) || categoryHandle}</span>
           </nav>
 
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 leading-tight">
@@ -219,14 +222,13 @@ function StorefrontCategoryCollectionPage() {
         {/* Sort bar */}
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pb-6 border-b border-border">
           <p className="text-sm text-muted-foreground font-medium">
-            {loading ? (
-              "جاري التحميل..."
-            ) : (
-              <>
-                عرض <span className="text-foreground font-bold">{paginatedProducts.length}</span> من{" "}
-                <span className="text-foreground font-bold">{sorted.length}</span> منتج
-              </>
-            )}
+             {loading ? (
+               t("common.loading")
+             ) : (
+               <>
+                 {t("collection.showing", { shown: paginatedProducts.length, total: sorted.length })}
+               </>
+             )}
           </p>
 
           <div className="flex items-center gap-2">
@@ -236,11 +238,11 @@ function StorefrontCategoryCollectionPage() {
               onChange={(e) => setSortKey(e.target.value as SortKey)}
               className="rounded-xl border border-input bg-surface px-4 py-2.5 text-sm font-semibold text-foreground focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand transition-all cursor-pointer"
             >
-              <option value="featured">المميزة أولاً</option>
-              <option value="price-asc">السعر: من الأقل للأعلى</option>
-              <option value="price-desc">السعر: من الأعلى للأقل</option>
-              <option value="newest">الأحدث</option>
-              <option value="rating">الأعلى تقييماً</option>
+               <option value="featured">{t("collection.sortFeatured")}</option>
+               <option value="price-asc">{t("collection.sortPriceAsc")}</option>
+               <option value="price-desc">{t("collection.sortPriceDesc")}</option>
+               <option value="newest">{t("collection.sortNewest")}</option>
+               <option value="rating">{t("collection.sortRating")}</option>
             </select>
           </div>
         </div>
@@ -253,16 +255,16 @@ function StorefrontCategoryCollectionPage() {
             <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-surface-secondary flex items-center justify-center">
               <SlidersHorizontal className="h-10 w-10 text-muted-foreground/50" />
             </div>
-            <h3 className="text-xl font-bold text-foreground mb-2">لا توجد منتجات</h3>
-            <p className="text-muted-foreground text-sm mb-6">
-              لم يتم العثور على منتجات في هذا القسم حتى الآن
-            </p>
-            <Link
-              to={href("/collections")}
-              className="inline-flex items-center gap-2 bg-brand text-white px-6 py-3 rounded-xl font-bold hover:bg-brand-hover transition-colors"
-            >
-              تصفح كل المنتجات
-            </Link>
+             <h3 className="text-xl font-bold text-foreground mb-2">{t("collection.noProducts")}</h3>
+             <p className="text-muted-foreground text-sm mb-6">
+               {t("collection.noProductsCategoryHint")}
+             </p>
+             <Link
+               to={href("/collections")}
+               className="inline-flex items-center gap-2 bg-brand text-white px-6 py-3 rounded-xl font-bold hover:bg-brand-hover transition-colors"
+             >
+               {t("collection.browseAll")}
+             </Link>
           </div>
         ) : (
           <>

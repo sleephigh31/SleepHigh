@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useHref } from "@/lib/locale";
+import { useHref, useT } from "@/lib/locale";
 import { X, LogIn, UserPlus, ShoppingBag, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
@@ -11,6 +11,7 @@ interface LoginPromptModalProps {
 
 export function LoginPromptModal({ open, onClose }: LoginPromptModalProps) {
   const href = useHref();
+  const t = useT();
 
   // Close on Escape key
   useEffect(() => {
@@ -67,7 +68,7 @@ export function LoginPromptModal({ open, onClose }: LoginPromptModalProps) {
           <button
             onClick={onClose}
             className="absolute top-4 left-4 p-2 rounded-full hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
-            aria-label="إغلاق"
+            aria-label={t("common.close")}
           >
             <X className="h-5 w-5" />
           </button>
@@ -81,10 +82,10 @@ export function LoginPromptModal({ open, onClose }: LoginPromptModalProps) {
 
           {/* Text */}
           <div className="text-center space-y-2">
-            <h2 className="text-xl font-black text-foreground">سجّل دخولك أولاً</h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              يجب تسجيل الدخول لتتمكن من إضافة المنتجات إلى سلة التسوق أو قائمة المفضلة.
-            </p>
+             <h2 className="text-xl font-black text-foreground">{t("loginPrompt.title")}</h2>
+             <p className="text-sm text-muted-foreground leading-relaxed">
+               {t("loginPrompt.text")}
+             </p>
           </div>
 
           {/* Features hint */}
@@ -93,19 +94,19 @@ export function LoginPromptModal({ open, onClose }: LoginPromptModalProps) {
               <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
                 <ShoppingBag className="h-4 w-4 text-brand" />
               </div>
-              <span>سلة التسوق</span>
+               <span>{t("loginPrompt.cart")}</span>
             </div>
             <div className="flex flex-col items-center gap-1.5">
               <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
                 <span className="text-brand text-sm">♡</span>
               </div>
-              <span>المفضلة</span>
+               <span>{t("loginPrompt.wishlist")}</span>
             </div>
             <div className="flex flex-col items-center gap-1.5">
               <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
                 <span className="text-brand text-sm">📦</span>
               </div>
-              <span>تتبع الطلبات</span>
+               <span>{t("loginPrompt.tracking")}</span>
             </div>
           </div>
 
@@ -116,16 +117,16 @@ export function LoginPromptModal({ open, onClose }: LoginPromptModalProps) {
               onClick={onClose}
               className="flex items-center justify-center gap-2 w-full rounded-2xl bg-brand px-6 py-3.5 font-bold text-brand-foreground hover:bg-brand-hover transition-colors"
             >
-              <LogIn className="h-5 w-5" />
-              تسجيل الدخول
+               <LogIn className="h-5 w-5" />
+               {t("loginPrompt.login")}
             </Link>
             <Link
               to={href("/account/register")}
               onClick={onClose}
               className="flex items-center justify-center gap-2 w-full rounded-2xl border border-border bg-card px-6 py-3.5 font-bold text-foreground hover:bg-muted transition-colors"
             >
-              <UserPlus className="h-5 w-5" />
-              إنشاء حساب جديد
+               <UserPlus className="h-5 w-5" />
+               {t("loginPrompt.register")}
             </Link>
           </div>
 
@@ -134,7 +135,7 @@ export function LoginPromptModal({ open, onClose }: LoginPromptModalProps) {
             onClick={onClose}
             className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
-            متابعة التصفح بدون تسجيل
+            {t("loginPrompt.skip")}
           </button>
         </div>
       </div>

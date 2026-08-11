@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useLocalized, useDir, useHref } from "@/lib/locale";
+import { useLocalized, useDir, useHref, useT, useFormatters } from "@/lib/locale";
 import { useStore } from "@/lib/store";
 import type { Address, PaymentMethod } from "@/lib/types";
 import { Lock, Truck, CreditCard, ChevronRight, ChevronLeft, MapPin } from "lucide-react";
@@ -15,6 +15,8 @@ function CheckoutPage() {
   const L = useLocalized();
   const dir = useDir();
   const href = useHref();
+  const t = useT();
+  const { price } = useFormatters();
   const navigate = useNavigate();
 
   const [step, setStep] = useState<1 | 2>(1);
@@ -52,14 +54,14 @@ function CheckoutPage() {
   if (cartLines.length === 0) {
     return (
       <div className="py-24 text-center space-y-4">
-        <h1 className="text-2xl font-bold">عذراً السلة فارغة</h1>
-        <p className="text-muted-foreground">لا يمكنك إتمام الطلب وسلة المشتريات فارغة.</p>
-        <Link
-          to={href("/collections")}
-          className="inline-block mt-4 text-brand hover:underline font-bold"
-        >
-          العودة للتسوق
-        </Link>
+         <h1 className="text-2xl font-bold">{t("checkout.emptyTitle")}</h1>
+         <p className="text-muted-foreground">{t("checkout.emptyCart")}</p>
+         <Link
+           to={href("/collections")}
+           className="inline-block mt-4 text-brand hover:underline font-bold"
+         >
+           {t("checkout.backToShopping")}
+         </Link>
       </div>
     );
   }
@@ -73,7 +75,7 @@ function CheckoutPage() {
       !address.city ||
       !address.street
     ) {
-      setError("يرجى إكمال جميع الحقول المطلوبة");
+       setError(t("checkout.missingFields"));
       return;
     }
     setError("");
@@ -100,10 +102,10 @@ function CheckoutPage() {
         }
         navigate({ to: href("/checkout/confirmation") });
       } else {
-        setError("حدث خطأ أثناء إتمام الطلب، يرجى المحاولة لاحقاً.");
+        setError(t("checkout.failed"));
       }
     } catch (err) {
-      setError("تعذر الاتصال بالخادم.");
+      setError(t("checkout.connectionFailed"));
     } finally {
       setLoading(false);
     }
@@ -132,7 +134,7 @@ function CheckoutPage() {
           >
             1
           </div>
-          <span className="font-bold">الشحن</span>
+          <span className="font-bold">{t("checkout.stepShipping")}</span>
         </div>
         <div className="h-px w-12 bg-border" />
         <div
@@ -149,7 +151,7 @@ function CheckoutPage() {
           >
             2
           </div>
-          <span className="font-bold">الدفع</span>
+          <span className="font-bold">{t("checkout.stepPayment")}</span>
         </div>
       </div>
 
@@ -167,23 +169,27 @@ function CheckoutPage() {
               <div className="rounded-3xl border border-border bg-card p-6 md:p-8 shadow-sm space-y-6">
                 <div className="flex items-center gap-3 border-b border-border pb-4">
                   <MapPin className="h-6 w-6 text-brand" />
-                  <h2 className="text-xl font-bold">عنوان الشحن</h2>
+                  <h2 className="text-xl font-bold">{t("checkout.shippingAddress")}</h2>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-sm font-bold text-foreground">الاسم بالكامل *</label>
+                    <label className="text-sm font-bold text-foreground">
+                      {t("checkout.fullName")} <span className="text-destructive">*</span>
+                    </label>
                     <input
                       type="text"
                       required
                       value={address.fullName}
                       onChange={(e) => setAddress({ ...address, fullName: e.target.value })}
                       className="w-full rounded-xl border border-input bg-background px-4 py-3"
-                      placeholder="الاسم الثلاثي"
+                      placeholder={t("checkout.fullNamePlaceholder")}
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-sm font-bold text-foreground">رقم الهاتف *</label>
+                    <label className="text-sm font-bold text-foreground">
+                      {t("checkout.phone")} <span className="text-destructive">*</span>
+                    </label>
                     <input
                       type="tel"
                       required
@@ -196,9 +202,9 @@ function CheckoutPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-sm font-bold text-foreground">
-                    البريد الإلكتروني (اختياري)
-                  </label>
+                    <label className="text-sm font-bold text-foreground">
+                      {t("checkout.emailOptional")}
+                    </label>
                   <input
                     type="email"
                     value={address.email}
@@ -210,50 +216,56 @@ function CheckoutPage() {
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-sm font-bold text-foreground">المحافظة *</label>
+                    <label className="text-sm font-bold text-foreground">
+                      {t("checkout.governorate")} <span className="text-destructive">*</span>
+                    </label>
                     <input
                       type="text"
                       required
                       value={address.governorate}
                       onChange={(e) => setAddress({ ...address, governorate: e.target.value })}
                       className="w-full rounded-xl border border-input bg-background px-4 py-3"
-                      placeholder="القاهرة"
+                      placeholder={t("checkout.governoratePlaceholder")}
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-sm font-bold text-foreground">المدينة / المنطقة *</label>
+                    <label className="text-sm font-bold text-foreground">
+                      {t("checkout.city")} <span className="text-destructive">*</span>
+                    </label>
                     <input
                       type="text"
                       required
                       value={address.city}
                       onChange={(e) => setAddress({ ...address, city: e.target.value })}
                       className="w-full rounded-xl border border-input bg-background px-4 py-3"
-                      placeholder="مدينة نصر"
+                      placeholder={t("checkout.cityPlaceholder")}
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-sm font-bold text-foreground">الشارع ورقم المبنى *</label>
+                    <label className="text-sm font-bold text-foreground">
+                      {t("checkout.street")} <span className="text-destructive">*</span>
+                    </label>
                   <input
                     type="text"
                     required
                     value={address.street}
                     onChange={(e) => setAddress({ ...address, street: e.target.value })}
                     className="w-full rounded-xl border border-input bg-background px-4 py-3"
-                    placeholder="12 شارع النزهة، الدور 3 شقة 5"
+                      placeholder={t("checkout.streetPlaceholder")}
                   />
                 </div>
 
                 <div className="space-y-1">
                   <label className="text-sm font-bold text-foreground">
-                    ملاحظات إضافية للمندوب (اختياري)
+                    {t("checkout.notes")}
                   </label>
                   <textarea
                     value={address.notes}
                     onChange={(e) => setAddress({ ...address, notes: e.target.value })}
                     className="w-full rounded-xl border border-input bg-background px-4 py-3 h-24 resize-none"
-                    placeholder="علامة مميزة أو موعد مفضل للتوصيل..."
+                    placeholder={t("checkout.notesPlaceholder")}
                   />
                 </div>
               </div>
@@ -263,13 +275,13 @@ function CheckoutPage() {
                   to={href("/cart")}
                   className="text-muted-foreground hover:text-foreground font-bold"
                 >
-                  العودة للسلة
+                 <span>{t("checkout.backToCart")}</span>
                 </Link>
                 <button
                   type="submit"
                   className="flex items-center gap-2 rounded-xl bg-brand px-8 py-3 font-bold text-brand-foreground hover:bg-brand-hover transition-colors"
                 >
-                  <span>المتابعة للدفع</span>
+                  <span>{t("checkout.next")}</span>
                   {dir === "rtl" ? (
                     <ChevronLeft className="h-5 w-5" />
                   ) : (
@@ -283,7 +295,7 @@ function CheckoutPage() {
               <div className="rounded-3xl border border-border bg-card p-6 md:p-8 shadow-sm space-y-6">
                 <div className="flex items-center gap-3 border-b border-border pb-4">
                   <CreditCard className="h-6 w-6 text-brand" />
-                  <h2 className="text-xl font-bold">طريقة الدفع</h2>
+                  <h2 className="text-xl font-bold">{t("checkout.paymentMethod")}</h2>
                 </div>
 
                 <div className="space-y-4">
@@ -307,10 +319,10 @@ function CheckoutPage() {
                       <div>
                         <div className="font-bold text-foreground flex items-center gap-2">
                           <Truck className="h-5 w-5 text-muted-foreground" />
-                          <span>الدفع عند الاستلام</span>
+                           <span>{t("checkout.cod")}</span>
                         </div>
                         <div className="text-xs text-muted-foreground mt-1">
-                          الدفع نقداً للمندوب عند استلام طلبك
+                           {t("checkout.codText")}
                         </div>
                       </div>
                     </div>
@@ -336,10 +348,10 @@ function CheckoutPage() {
                       <div>
                         <div className="font-bold text-foreground flex items-center gap-2">
                           <CreditCard className="h-5 w-5 text-muted-foreground" />
-                          <span>البطاقة الائتمانية</span>
+                           <span>{t("checkout.card")}</span>
                         </div>
                         <div className="text-xs text-muted-foreground mt-1">
-                          فيزا / ماستركارد عبر بوابة دفع آمنة
+                  {t("checkout.cardText")}
                         </div>
                       </div>
                     </div>
@@ -361,7 +373,7 @@ function CheckoutPage() {
                   className="flex items-center gap-2 rounded-xl bg-brand px-8 py-3 font-bold text-brand-foreground hover:bg-brand-hover transition-colors disabled:opacity-50"
                 >
                   <Lock className="h-5 w-5" />
-                  <span>{loading ? "جاري التأكيد..." : "تأكيد الطلب"}</span>
+                  <span>{loading ? t("checkout.placingOrder") : t("checkout.placeOrder")}</span>
                 </button>
               </div>
             </form>
@@ -371,9 +383,9 @@ function CheckoutPage() {
         {/* Order Summary */}
         <div className="lg:col-span-5">
           <div className="rounded-3xl border border-border bg-muted/20 p-6 space-y-6 lg:sticky lg:top-24">
-            <h3 className="text-lg font-bold border-b border-border pb-4">
-              ملخص الطلب ({cartLines.length})
-            </h3>
+               <h3 className="text-lg font-bold border-b border-border pb-4">
+                 {t("checkout.orderSummaryCount", { count: cartLines.length })}
+               </h3>
 
             <div className="space-y-4 max-h-[40vh] overflow-y-auto hide-scrollbar">
               {cartLines.map((line) => (
@@ -403,24 +415,24 @@ function CheckoutPage() {
 
             <div className="border-t border-border pt-4 space-y-3 text-sm">
               <div className="flex justify-between text-muted-foreground">
-                <span>المجموع الفرعي</span>
-                <span className="font-bold text-foreground">
-                  {subtotal.toLocaleString("ar-EG")} ج.م
-                </span>
+                 <span>{t("checkout.subtotal")}</span>
+                 <span className="font-bold text-foreground">
+                   {price(subtotal)}
+                 </span>
               </div>
               <div className="flex justify-between text-muted-foreground">
-                <span>الشحن</span>
-                <span className="font-bold text-foreground">
-                  {shipping === 0 ? "مجاني" : `${shipping.toLocaleString("ar-EG")} ج.م`}
-                </span>
+                 <span>{t("checkout.shipping")}</span>
+                 <span className="font-bold text-foreground">
+                   {shipping === 0 ? t("checkout.freeShipping") : price(shipping)}
+                 </span>
               </div>
             </div>
 
             <div className="border-t border-border pt-4 flex justify-between items-end">
-              <span className="font-bold text-lg">الإجمالي</span>
-              <span className="text-2xl font-black text-brand">
-                {total.toLocaleString("ar-EG")} ج.م
-              </span>
+               <span className="font-bold text-lg">{t("checkout.total")}</span>
+               <span className="text-2xl font-black text-brand">
+                 {price(total)}
+               </span>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate, useParams, Link } from "@tanstack/react-router";
-import { useDir, useLocalized, useHref } from "@/lib/locale";
+import { useDir, useLocalized, useHref, useT, useFormatters } from "@/lib/locale";
 import { useStore } from "@/lib/store";
 import type { Order } from "@/lib/types";
 import { ArrowLeft, ArrowRight, Package, MapPin, CreditCard, Clock } from "lucide-react";
@@ -16,6 +16,8 @@ function OrderDetailsPage() {
   const dir = useDir();
   const L = useLocalized();
   const href = useHref();
+  const t = useT();
+  const { price, dateTime } = useFormatters();
   const navigate = useNavigate();
 
   const [order, setOrder] = useState<Order | null>(null);
@@ -33,23 +35,23 @@ function OrderDetailsPage() {
 
   if (!hydrated || !user) {
     return (
-      <div className="py-24 text-center text-muted-foreground font-bold">
-        جاري تحميل البيانات...
-      </div>
+         <div className="py-24 text-center text-muted-foreground font-bold">
+           {t("common.loading")}
+         </div>
     );
   }
 
   if (!order) {
     return (
       <div className="py-24 text-center space-y-4">
-        <h1 className="text-2xl font-bold">الطلب غير موجود</h1>
-        <p className="text-muted-foreground">لم نتمكن من العثور على هذا الطلب في حسابك.</p>
-        <Link
-          to={href("/account/orders")}
-          className="inline-block mt-4 text-brand hover:underline font-bold"
-        >
-          العودة لطلباتي
-        </Link>
+         <h1 className="text-2xl font-bold">{t("orderDetails.notFound")}</h1>
+         <p className="text-muted-foreground">{t("orderDetails.notFoundHint")}</p>
+         <Link
+           to={href("/account/orders")}
+           className="inline-block mt-4 text-brand hover:underline font-bold"
+         >
+           {t("orderDetails.backToOrders")}
+         </Link>
       </div>
     );
   }
@@ -110,7 +112,7 @@ function OrderDetailsPage() {
           <div className="rounded-3xl border border-border bg-card p-6 shadow-sm space-y-6">
             <h2 className="text-lg font-bold flex items-center gap-2 border-b border-border pb-4">
               <Package className="h-5 w-5 text-brand" />
-              <span>المنتجات المطلوبة ({order.lines.length})</span>
+               <span>{t("orderDetails.items", { count: order.lines.length })}</span>
             </h2>
 
             <div className="space-y-4">
@@ -136,9 +138,9 @@ function OrderDetailsPage() {
                     <p className="font-bold text-sm text-brand">
                       {(line.unitPrice * line.quantity).toLocaleString("ar-EG")} ج.م
                     </p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {line.unitPrice.toLocaleString("ar-EG")} ج.م للوحدة
-                    </p>
+                       <p className="text-xs text-muted-foreground mt-1">
+                         {line.unitPrice.toLocaleString("ar-EG")} ج.م {t("orderDetails.unitPrice")}
+                       </p>
                   </div>
                 </div>
               ))}
@@ -150,7 +152,7 @@ function OrderDetailsPage() {
             <div className="rounded-3xl border border-border bg-card p-6 shadow-sm space-y-6">
               <h2 className="text-lg font-bold flex items-center gap-2 border-b border-border pb-4">
                 <Clock className="h-5 w-5 text-brand" />
-                <span>سجل تتبع الطلب</span>
+                 <span>{t("orderDetails.timeline")}</span>
               </h2>
 
               <div className="space-y-6 relative before:absolute before:inset-y-0 before:start-2.5 before:w-0.5 before:bg-border">
@@ -190,41 +192,41 @@ function OrderDetailsPage() {
           <div className="rounded-3xl border border-border bg-card p-6 shadow-sm space-y-6">
             <h2 className="text-lg font-bold flex items-center gap-2 border-b border-border pb-4">
               <CreditCard className="h-5 w-5 text-brand" />
-              <span>ملخص التكلفة</span>
+                 <span>{t("orderDetails.costSummary")}</span>
             </h2>
 
             <div className="space-y-3 text-sm">
               <div className="flex justify-between text-muted-foreground">
-                <span>المجموع الفرعي</span>
-                <span className="font-bold text-foreground">
-                  {order.subtotal.toLocaleString("ar-EG")} ج.م
-                </span>
+                 <span>{t("orderDetails.subtotal")}</span>
+                 <span className="font-bold text-foreground">
+                   {price(order.subtotal)}
+                 </span>
               </div>
               <div className="flex justify-between text-muted-foreground">
-                <span>الشحن</span>
-                <span className="font-bold text-foreground">
-                  {order.shipping === 0 ? "مجاني" : `${order.shipping.toLocaleString("ar-EG")} ج.م`}
-                </span>
+                 <span>{t("orderDetails.shipping")}</span>
+                 <span className="font-bold text-foreground">
+                   {order.shipping === 0 ? t("orderDetails.freeShipping") : price(order.shipping)}
+                 </span>
               </div>
               {order.discount > 0 && (
                 <div className="flex justify-between text-success">
-                  <span>الخصم</span>
-                  <span className="font-bold">-{order.discount.toLocaleString("ar-EG")} ج.م</span>
+                   <span>{t("orderDetails.discount")}</span>
+                   <span className="font-bold">-{price(order.discount)}</span>
                 </div>
               )}
             </div>
 
             <div className="border-t border-border pt-4 flex justify-between items-end">
-              <span className="font-bold text-base">الإجمالي</span>
-              <span className="text-2xl font-black text-brand">
-                {order.total.toLocaleString("ar-EG")} ج.م
-              </span>
+               <span className="font-bold text-base">{t("orderDetails.total")}</span>
+               <span className="text-2xl font-black text-brand">
+                 {price(order.total)}
+               </span>
             </div>
 
             <div className="border-t border-border pt-4 mt-4">
-              <p className="text-sm font-bold text-muted-foreground mb-1">طريقة الدفع</p>
+               <p className="text-sm font-bold text-muted-foreground mb-1">{t("orderDetails.paymentMethod")}</p>
               <p className="font-bold text-sm text-foreground">
-                {order.paymentMethod === "cod" ? "الدفع نقداً عند الاستلام" : "دفع إلكتروني مسبق"}
+                 {order.paymentMethod === "cod" ? t("payment.codLong") : t("payment.cardLong")}
               </p>
             </div>
           </div>
@@ -232,7 +234,7 @@ function OrderDetailsPage() {
           <div className="rounded-3xl border border-border bg-card p-6 shadow-sm space-y-6">
             <h2 className="text-lg font-bold flex items-center gap-2 border-b border-border pb-4">
               <MapPin className="h-5 w-5 text-brand" />
-              <span>عنوان التوصيل</span>
+               <span>{t("orderDetails.deliveryAddress")}</span>
             </h2>
 
             <div className="space-y-2 text-sm">

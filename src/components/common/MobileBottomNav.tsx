@@ -1,10 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { Home, Search, LayoutGrid, User, ShoppingCart } from "lucide-react";
-import { useHref } from "@/lib/locale";
+import { useHref, useT } from "@/lib/locale";
 import { useStore } from "@/lib/store";
 
 export function MobileBottomNav() {
   const href = useHref();
+  const t = useT();
   const { cartCount, cartOpen, setCartOpen, user } = useStore();
 
   return (
@@ -18,7 +19,7 @@ export function MobileBottomNav() {
           activeProps={{ className: "text-[#C8102E] font-black" }}
         >
           <Home className="h-5 w-5 stroke-[1.8]" />
-          <span>الرئيسية</span>
+          <span>{t("nav.home")}</span>
         </Link>
 
         {/* 2. Search */}
@@ -28,7 +29,7 @@ export function MobileBottomNav() {
           activeProps={{ className: "text-[#C8102E] font-black" }}
         >
           <Search className="h-5 w-5 stroke-[1.8]" />
-          <span>البحث</span>
+          <span>{t("header.searchShort")}</span>
         </Link>
 
         {/* 3. Collections */}
@@ -38,7 +39,7 @@ export function MobileBottomNav() {
           activeProps={{ className: "text-[#C8102E] font-black" }}
         >
           <LayoutGrid className="h-5 w-5 stroke-[1.8]" />
-          <span>المجموعة</span>
+          <span>{t("nav.collectionsShort")}</span>
         </Link>
 
         {/* 4. Account */}
@@ -48,7 +49,7 @@ export function MobileBottomNav() {
           activeProps={{ className: "text-[#C8102E] font-black" }}
         >
           <User className="h-5 w-5 stroke-[1.8]" />
-          <span>الحساب</span>
+          <span>{t("header.account")}</span>
         </Link>
 
         {/* 5. Cart */}
@@ -62,7 +63,7 @@ export function MobileBottomNav() {
               {cartCount}
             </span>
           </div>
-          <span>سلة التسوق</span>
+          <span>{t("header.cart")}</span>
         </button>
       </div>
     </div>

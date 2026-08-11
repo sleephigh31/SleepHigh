@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { defaultSelection, findVariantByOptions, priceRange } from "@/lib/services/catalog";
 import { useHref, useLocalized, useT } from "@/lib/locale";
 import { useStore } from "@/lib/store";
-import type { Product } from "@/lib/types";
+import type { Product, ProductVariant } from "@/lib/types";
 
 export function ProductCard({
   product,

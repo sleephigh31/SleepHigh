@@ -325,6 +325,14 @@ export interface StoreSettings {
   address?: string | undefined;
   branch1?: string | undefined;
   branch2?: string | undefined;
+  /**
+   * Optional English counterparts for the free-text location fields.
+   * When empty the storefront falls back to the Arabic value so real data is
+   * never hidden, and to a translated default when nothing is stored at all.
+   */
+  addressEn?: string | undefined;
+  branch1En?: string | undefined;
+  branch2En?: string | undefined;
   descriptionAr?: string | undefined;
   descriptionEn?: string | undefined;
   shipping: {

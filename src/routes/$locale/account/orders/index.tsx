@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useDir, useHref } from "@/lib/locale";
+import { useDir, useHref, useT, useFormatters } from "@/lib/locale";
 import { useStore } from "@/lib/store";
 import { Package, ArrowLeft, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -13,11 +13,13 @@ function OrdersPage() {
   const { orders } = useStore();
   const dir = useDir();
   const href = useHref();
+  const t = useT();
+  const { price } = useFormatters();
 
   return (
     <AccountLayout activeTab="orders">
       <div className="space-y-8">
-        <h2 className="text-xl font-bold border-b border-border pb-4">طلباتي</h2>
+         <h2 className="text-xl font-bold border-b border-border pb-4">{t("orders.title")}</h2>
 
         {orders.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center space-y-6 border border-border bg-card rounded-3xl shadow-sm">
@@ -25,14 +27,14 @@ function OrdersPage() {
               <Package className="h-12 w-12 text-brand" />
             </div>
             <div className="space-y-2">
-              <h2 className="text-xl font-bold text-foreground">لم تقم بإجراء أي طلبات</h2>
-              <p className="text-muted-foreground">عندما تقوم بالشراء، ستظهر طلباتك هنا.</p>
+             <h2 className="text-xl font-bold text-foreground">{t("account.noOrders")}</h2>
+             <p className="text-muted-foreground">{t("account.noOrdersHint")}</p>
             </div>
             <Link
               to={href("/collections")}
               className="inline-flex items-center gap-2 rounded-xl bg-brand px-6 py-3 font-bold text-brand-foreground hover:bg-brand-hover transition-colors"
             >
-              <span>تسوق الآن</span>
+               <span>{t("account.shopNow")}</span>
               {dir === "rtl" ? (
                 <ArrowLeft className="h-5 w-5" />
               ) : (
@@ -49,13 +51,13 @@ function OrdersPage() {
               >
                 <div className="p-6 md:w-1/3 border-b md:border-b-0 md:border-e border-border bg-muted/20 space-y-4">
                   <div>
-                    <p className="text-sm font-bold text-muted-foreground">رقم الطلب</p>
+                     <p className="text-sm font-bold text-muted-foreground">{t("orders.orderNumber")}</p>
                     <p className="text-lg font-black font-mono text-foreground mt-1">
                       #{order.number}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-muted-foreground">تاريخ الطلب</p>
+                     <p className="text-sm font-bold text-muted-foreground">{t("orders.orderDate")}</p>
                     <p className="text-sm font-bold text-foreground mt-1">
                       {new Date(order.createdAt).toLocaleDateString("ar-EG", {
                         year: "numeric",
@@ -65,13 +67,13 @@ function OrdersPage() {
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-muted-foreground">الإجمالي</p>
+                     <p className="text-sm font-bold text-muted-foreground">{t("orders.total")}</p>
                     <p className="text-xl font-black text-brand mt-1">
                       {order.total.toLocaleString("ar-EG")} ج.م
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-muted-foreground mb-1">حالة الطلب</p>
+                     <p className="text-sm font-bold text-muted-foreground mb-1">{t("orders.status")}</p>
                     <span
                       className={cn(
                         "inline-block px-3 py-1 rounded-md text-xs font-bold",
@@ -101,9 +103,9 @@ function OrdersPage() {
 
                 <div className="p-6 md:w-2/3 flex flex-col">
                   <div className="flex-1">
-                    <h3 className="font-bold text-foreground mb-4">
-                      المنتجات ({order.lines.length})
-                    </h3>
+                       <h3 className="font-bold text-foreground mb-4">
+                         {t("orders.products", { count: order.lines.length })}
+                       </h3>
                     <div className="space-y-4 max-h-[200px] overflow-y-auto pr-2 hide-scrollbar">
                       {order.lines.map((line, idx) => (
                         <div key={idx} className="flex gap-4 items-center">
@@ -128,7 +130,7 @@ function OrdersPage() {
                       to={href(`/account/orders/${order.id}`)}
                       className="flex items-center gap-2 rounded-xl bg-background border border-border px-6 py-2.5 font-bold text-foreground hover:bg-muted transition-colors"
                     >
-                      <span>عرض التفاصيل</span>
+                       <span>{t("orders.viewDetails")}</span>
                       {dir === "rtl" ? (
                         <ArrowLeft className="h-4 w-4" />
                       ) : (

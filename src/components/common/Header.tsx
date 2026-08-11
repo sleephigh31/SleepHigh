@@ -120,16 +120,16 @@ export function Header() {
         {/* Drawer Header */}
         <div className="flex items-center justify-between px-4 py-3.5 border-b border-gray-100 shrink-0 bg-gray-50/50">
           <Link to={href("/")} onClick={() => setMobileMenuOpen(false)}>
-            <img
-              src="https://sleephigh-eg.myshopify.com/cdn/shop/files/h_logo_250x.png?v=1697100417"
-              alt="سليب هاي"
-              className="h-12 w-auto object-contain"
-            />
+             <img
+               src="https://sleephigh-eg.myshopify.com/cdn/shop/files/h_logo_250x.png?v=1697100417"
+               alt={t("brand.logoAlt")}
+               className="h-12 w-auto object-contain"
+             />
           </Link>
           <button
             onClick={() => setMobileMenuOpen(false)}
             className="p-2 text-gray-500 hover:bg-white hover:text-gray-800 rounded-xl transition-all border border-transparent hover:border-gray-200"
-            aria-label="إغلاق القائمة"
+             aria-label={t("nav.closeMenu")}
           >
             <X className="h-5 w-5" />
           </button>
@@ -140,7 +140,7 @@ export function Header() {
           {/* Nav Links */}
           <nav className="px-3 py-3 space-y-0.5">
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-4 mb-2">
-              {isRTL ? "التنقل" : "Navigation"}
+               {isRTL ? t("nav.navigation") : "Navigation"}
             </p>
             {navLinks.map((link) => (
               <Link
@@ -181,7 +181,7 @@ export function Header() {
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-red-50 shrink-0">
                 <User className="h-4 w-4 text-[#C8102E]" />
               </span>
-              <span>{user ? t("header.account") : isRTL ? "تسجيل الدخول" : "Sign In"}</span>
+               <span>{user ? t("header.account") : t("nav.signIn")}</span>
             </Link>
 
             {/* Admin (Mobile) */}
@@ -194,7 +194,7 @@ export function Header() {
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-red-100 shrink-0">
                   <ShieldCheck className="h-4 w-4 text-[#C8102E]" />
                 </span>
-                <span>{isRTL ? "لوحة الإدارة" : "Admin Dashboard"}</span>
+                 <span>{t("nav.adminDashboard")}</span>
               </Link>
             )}
 
@@ -289,11 +289,11 @@ export function Header() {
 
           {/* LOGO */}
           <Link to={href("/")} className="flex items-center shrink-0 group py-1 px-1">
-            <img
-              src="https://sleephigh-eg.myshopify.com/cdn/shop/files/h_logo_250x.png?v=1697100417"
-              alt="سليب هاي SLEEP HIGH"
-              className="h-12 sm:h-14 lg:h-[60px] w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-            />
+             <img
+               src="https://sleephigh-eg.myshopify.com/cdn/shop/files/h_logo_250x.png?v=1697100417"
+               alt={t("brand.logoAlt")}
+               className="h-12 sm:h-14 lg:h-[60px] w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+             />
           </Link>
         </div>
 
@@ -348,7 +348,7 @@ export function Header() {
           <a
             href={swapLocaleInPath(currentPath, otherLocale)}
             className="hidden lg:flex items-center gap-1.5 text-xs font-bold text-gray-700 hover:text-[#C8102E] bg-gray-100/80 hover:bg-red-50 border border-gray-200 hover:border-red-200 px-3 py-2 rounded-xl transition-all"
-            title={isRTL ? "Switch to English" : "التحويل للعربية"}
+            title={t("nav.switchLanguage")}
           >
             <Globe className="h-4 w-4 text-[#C8102E]" />
             <span>{isRTL ? "English" : "العربية"}</span>
@@ -370,7 +370,7 @@ export function Header() {
               to="/admin"
               preload="intent"
               className="hidden sm:flex p-2 text-[#C8102E] bg-red-50 hover:bg-[#C8102E] hover:text-white rounded-xl transition-all shadow-sm"
-              title={isRTL ? "لوحة الإدارة" : "Admin Dashboard"}
+               title={t("nav.adminDashboard")}
             >
               <ShieldCheck className="h-5 w-5 stroke-[2]" />
             </Link>
@@ -434,7 +434,7 @@ export function Header() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={isRTL ? "ابحث عن أي شيء..." : "Search anything..."}
+               placeholder={t("header.searchPlaceholderMobile")}
               className="w-full py-2.5 ltr:pl-4 ltr:pr-10 rtl:pr-4 rtl:pl-10 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:bg-white focus:border-[#C8102E] focus:ring-2 focus:ring-red-100 transition-all"
             />
             <button

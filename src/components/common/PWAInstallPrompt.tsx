@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { X, Download, Smartphone, Wifi, Bell, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useT } from "@/lib/locale";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -15,6 +16,7 @@ export function PWAInstallPrompt() {
   const [show, setShow] = useState(false);
   const [installing, setInstalling] = useState(false);
   const [installed, setInstalled] = useState(false);
+  const t = useT();
 
   useEffect(() => {
     // Don't show if already dismissed or installed
@@ -91,7 +93,7 @@ export function PWAInstallPrompt() {
         <button
           onClick={handleDismiss}
           className="absolute top-3 left-3 p-1.5 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-white/70 hover:text-white z-10"
-          aria-label="إغلاق"
+          aria-label={t("common.close")}
         >
           <X className="h-4 w-4" />
         </button>
@@ -104,22 +106,22 @@ export function PWAInstallPrompt() {
               <span className="text-white font-black text-sm leading-none">SH</span>
             </div>
             <div>
-              <p className="text-[10px] font-bold text-[#C8102E] tracking-widest uppercase mb-0.5">
-                تجربة أفضل
-              </p>
-              <h3 className="text-white font-black text-base leading-tight">
-                حمّل التطبيق مجاناً!
-              </h3>
-              <p className="text-white/50 text-xs">سليب هاي مصر</p>
+               <p className="text-[10px] font-bold text-[#C8102E] tracking-widest uppercase mb-0.5">
+                 {t("pwa.eyebrow")}
+               </p>
+               <h3 className="text-white font-black text-base leading-tight">
+                 {t("pwa.title")}
+               </h3>
+               <p className="text-white/50 text-xs">{t("pwa.brand")}</p>
             </div>
           </div>
 
           {/* Features */}
           <div className="grid grid-cols-3 gap-2">
             {[
-              { icon: Wifi, label: "تصفح بدون إنترنت" },
-              { icon: Bell, label: "إشعارات العروض" },
-              { icon: Star, label: "تجربة أسرع" },
+              { icon: Wifi, label: t("pwa.offline") },
+              { icon: Bell, label: t("pwa.notifications") },
+              { icon: Star, label: t("pwa.faster") },
             ].map(({ icon: Icon, label }) => (
               <div
                 key={label}
@@ -138,13 +140,13 @@ export function PWAInstallPrompt() {
             {Array.from({ length: 5 }).map((_, i) => (
               <Star key={i} className="h-3 w-3 fill-[#f1c100] text-[#f1c100]" />
             ))}
-            <span className="text-white/50 text-xs mr-1">تقييم 4.9 من 5</span>
+            <span className="text-white/50 text-xs mr-1">{t("pwa.rating")}</span>
           </div>
 
           {/* Install button */}
           {installed ? (
             <div className="flex items-center justify-center gap-2 py-3 rounded-2xl bg-green-500/20 border border-green-500/30">
-              <span className="text-green-400 font-bold text-sm">✓ تم التثبيت بنجاح!</span>
+               <span className="text-green-400 font-bold text-sm">✓ {t("pwa.installed")}</span>
             </div>
           ) : (
             <button
@@ -177,12 +179,12 @@ export function PWAInstallPrompt() {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                     />
                   </svg>
-                  جاري التثبيت...
+                   {t("pwa.installing")}
                 </span>
               ) : (
                 <>
                   <Download className="h-4 w-4" />
-                  تحميل التطبيق مجاناً
+                  {t("pwa.install")}
                   <Smartphone className="h-4 w-4 opacity-70" />
                 </>
               )}
@@ -194,7 +196,7 @@ export function PWAInstallPrompt() {
             onClick={handleDismiss}
             className="w-full text-center text-[11px] text-white/30 hover:text-white/50 transition-colors pb-1"
           >
-            لا شكراً، متابعة من المتصفح
+            {t("pwa.dismiss")}
           </button>
         </div>
       </div>

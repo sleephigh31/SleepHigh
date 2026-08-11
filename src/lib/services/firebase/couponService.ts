@@ -17,8 +17,6 @@ import {
 import { db } from "@/lib/firebase";
 import type { Coupon } from "@/lib/types";
 
-const COUPONS_COL = "coupons";
-
 function docToCoupon(id: string, data: any): Coupon {
   return {
     id,

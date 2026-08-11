@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { defaultSelection, findVariantByOptions } from "@/lib/services/catalog";
 import { useHref, useLocalized, useT } from "@/lib/locale";
 import { useStore } from "@/lib/store";
-import type { Product, VariantOptionValues } from "@/lib/types";
+import type { Product, ProductVariant, VariantOptionValues } from "@/lib/types";
 
 export function QuickView({
   product,
