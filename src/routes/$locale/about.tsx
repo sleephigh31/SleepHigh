@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Award, ShieldCheck, Factory, HeartHandshake, ChevronLeft } from "lucide-react";
-import { useHref, useT } from "@/lib/locale";
+import { useHref, useT, useDir } from "@/lib/locale";
 
 export const Route = createFileRoute("/$locale/about")({
   component: AboutPage,
@@ -9,9 +9,10 @@ export const Route = createFileRoute("/$locale/about")({
 function AboutPage() {
   const href = useHref();
   const t = useT();
+  const dir = useDir();
 
   return (
-    <div className="container-page py-12 space-y-16 dir-rtl text-foreground">
+    <div dir={dir} className="container-page py-12 space-y-16 text-foreground">
       {/* HERO BANNER */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-gray-900 via-gray-800 to-[#990011] text-white p-8 md:p-16 space-y-6 shadow-xl">
          <span className="inline-block rounded-full bg-red-500/20 px-3.5 py-1 text-xs font-bold text-red-300 border border-red-500/30">

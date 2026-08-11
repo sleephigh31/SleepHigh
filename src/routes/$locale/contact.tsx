@@ -13,7 +13,7 @@ import {
 import { getSettings } from "@/lib/services/firebase/settingsService";
 import { submitSiteMessage } from "@/lib/services/firebase/messageService";
 import type { StoreSettings } from "@/lib/types";
-import { useT, useFormatters } from "@/lib/locale";
+import { useT, useFormatters, useDir } from "@/lib/locale";
 
 const TikTokIcon = () => (
   <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
@@ -38,6 +38,7 @@ function ContactPage() {
     message: "",
   });
   const t = useT();
+  const dir = useDir();
   const { price } = useFormatters();
 
   useEffect(() => {
@@ -82,13 +83,18 @@ function ContactPage() {
   const csPhone = settings?.customerServicePhone || settings?.phone || "01207864015";
   const salesPhone = settings?.salesPhone || "01016787142";
   const emailAddr = settings?.email || "info@sleephigh-eg.com";
-  const branch1Text = settings?.branch1 || "كفر الزيات — شارع مجلس المدينة، بجوار البوسطة الجديدة";
-  const branch2Text = settings?.branch2 || "كفر الزيات — بنوفر، بجوار بنك ناصر الاجتماعي";
+  const branch1Text =
+    (dir === "ltr" ? settings?.branch1En : settings?.branch1) || t("footer.branch1Address");
+  const branch2Text =
+    (dir === "ltr" ? settings?.branch2En : settings?.branch2) || t("footer.branch2Address");
   const tiktokUrl = settings?.social?.tiktok || "https://www.tiktok.com/@sleephigh29";
   const facebookUrl = settings?.social?.facebook || "https://www.facebook.com/share/18dusX3iui/";
 
   return (
-    <div className="container-page py-10 md:py-14 space-y-10 md:space-y-14 dir-rtl text-foreground">
+    <div
+      dir={dir}
+      className="container-page py-10 md:py-14 space-y-10 md:space-y-14 text-foreground"
+    >
       {/* HEADER BANNER */}
       <div className="text-center space-y-3.5 max-w-2xl mx-auto px-4">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-[#fde8ea] px-4 py-1.5 text-xs font-bold text-[#C8102E] shadow-2xs">
@@ -282,7 +288,7 @@ function ContactPage() {
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="مثال: أحمد محمود"
+                    placeholder={t("contact.formNamePlaceholder")}
                     className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#C8102E] focus:bg-white transition-all"
                   />
                 </div>
@@ -322,7 +328,7 @@ function ContactPage() {
                     type="text"
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    placeholder="استفسار عن مرتبة / فرع / طلب"
+                    placeholder={t("contact.formSubjectPlaceholder")}
                     className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#C8102E] focus:bg-white transition-all"
                   />
                 </div>
@@ -337,7 +343,7 @@ function ContactPage() {
                   rows={5}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  placeholder="اكتب استفسارك أو التفاصيل التي تريد الاستعلام عنها هنا..."
+                  placeholder={t("contact.formMessagePlaceholder")}
                   className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#C8102E] focus:bg-white transition-all"
                 />
               </div>
