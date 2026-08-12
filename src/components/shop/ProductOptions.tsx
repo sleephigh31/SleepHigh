@@ -1,6 +1,6 @@
-import { findVariantByOptions } from "@/lib/services/catalog";
+import { normalizeOptionValue } from "@/lib/services/catalog";
 import { useLocalized, useT } from "@/lib/locale";
-import type { Product, VariantOptionValues } from "@/lib/types";
+import type { Product, ProductVariant, VariantOptionValues } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 export function ProductOptions({
@@ -17,16 +17,41 @@ export function ProductOptions({
   const L = useLocalized();
   const t = useT();
 
-  const isValueAvailable = (key: string, value: string) => {
-    const candidate = { ...selection, [key]: value };
-    // only enforce keys up to this one so users can always explore combinations
-    const variant = findVariantByOptions(product, candidate);
-    return Boolean(variant?.available);
+  const variantMatches = (variant: ProductVariant, sel: VariantOptionValues) =>
+    Object.entries(sel).every(
+      ([k, v]) => normalizeOptionValue(variant.options[k]) === normalizeOptionValue(v),
+    );
+
+  // A value is available if an in-stock variant exists for it, enforcing only the
+  // options that come *before* this one so each option reflects its own real stock
+  // instead of demanding the full current combination exist.
+  const isValueAvailable = (optionIndex: number, key: string, value: string) => {
+    const locked: VariantOptionValues = {};
+    for (let i = 0; i < optionIndex; i++) {
+      const k = product.options[i]!.key;
+      if (selection[k] != null && selection[k] !== "") locked[k] = selection[k];
+    }
+    return product.variants.some(
+      (v) => v.available && v.stock > 0 && variantMatches(v, { ...locked, [key]: value }),
+    );
+  };
+
+  // Resolve a real available variant for the chosen value and adopt its full option
+  // set, so dependent options (and price/stock) stay consistent after each change.
+  const handleSelect = (key: string, value: string) => {
+    const withValue = { ...selection, [key]: value };
+    let match = product.variants.find((v) => v.available && variantMatches(v, withValue));
+    if (!match) {
+      match = product.variants.find(
+        (v) => v.available && normalizeOptionValue(v.options[key]) === normalizeOptionValue(value),
+      );
+    }
+    onChange(match ? { ...match.options } : withValue);
   };
 
   return (
     <div className={cn("space-y-4", compact && "space-y-3")}>
-      {product.options.map((option) => (
+      {product.options.map((option, optionIndex) => (
         <fieldset key={option.key}>
           <legend className="mb-2 text-sm font-bold text-gray-800 flex justify-between w-full">
             <span>{L(option.label)}:</span>
@@ -37,11 +62,11 @@ export function ProductOptions({
             <div className="relative">
               <select
                 value={selection[option.key] || ""}
-                onChange={(e) => onChange({ ...selection, [option.key]: e.target.value })}
+                onChange={(e) => handleSelect(option.key, e.target.value)}
                 className="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-800 transition-colors focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand hover:border-gray-300 pl-10"
               >
                 {option.values.map((value) => {
-                  const available = isValueAvailable(option.key, value.value);
+                  const available = isValueAvailable(optionIndex, option.key, value.value);
                   return (
                     <option key={value.value} value={value.value} disabled={!available}>
                        {L(value.label)} {available ? "" : t("product.unavailableOption")}
@@ -64,12 +89,12 @@ export function ProductOptions({
             <div className="flex flex-wrap gap-2">
               {option.values.map((value) => {
                 const selected = selection[option.key] === value.value;
-                const available = isValueAvailable(option.key, value.value);
+                const available = isValueAvailable(optionIndex, option.key, value.value);
                 return (
                   <button
                     key={value.value}
                     type="button"
-                    onClick={() => onChange({ ...selection, [option.key]: value.value })}
+                    onClick={() => handleSelect(option.key, value.value)}
                     aria-pressed={selected}
                     className={cn(
                       "min-h-12 rounded-xl border px-5 text-sm font-bold transition-all",

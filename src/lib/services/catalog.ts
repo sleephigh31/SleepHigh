@@ -70,9 +70,16 @@ export function priceRange(product: Product) {
   return { min, max, hasRange: max > min };
 }
 
+/** Normalize an option value for comparison (handles number/string, whitespace). */
+export function normalizeOptionValue(value: unknown): string {
+  return String(value ?? "").trim();
+}
+
 export function findVariantByOptions(product: Product, selection: VariantOptionValues) {
   return product.variants.find((variant) =>
-    Object.entries(selection).every(([key, value]) => variant.options[key] === value),
+    Object.entries(selection).every(
+      ([key, value]) => normalizeOptionValue(variant.options[key]) === normalizeOptionValue(value),
+    ),
   );
 }
 

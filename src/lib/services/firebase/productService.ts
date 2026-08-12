@@ -515,8 +515,9 @@ export function emptyFilters(): ProductFilters {
 }
 
 export function findVariantByOptions(product: Product, selection: Record<string, string>) {
+  const norm = (v: unknown) => String(v ?? "").trim();
   return product.variants.find((v) =>
-    Object.entries(selection).every(([k, val]) => v.options[k] === val),
+    Object.entries(selection).every(([k, val]) => norm(v.options[k]) === norm(val)),
   );
 }
 
