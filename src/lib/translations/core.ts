@@ -26,6 +26,7 @@ export const coreDict = {
   },
   "announce.cod": { ar: "الدفع عند الاستلام متاح", en: "Cash on delivery available" },
   "announce.warranty": { ar: "ضمان يصل إلى ٥ سنوات", en: "Up to 5 years warranty" },
+  "announce.warrantyShort": { ar: "ضمان ٥ سنوات", en: "5-year warranty" },
   "announce.close": { ar: "إغلاق الإعلان", en: "Dismiss announcement" },
 
   // nav
@@ -110,6 +111,7 @@ export const coreDict = {
     en: "Selected materials and tested production batches.",
   },
   "benefit.support": { ar: "دعم العملاء", en: "Customer support" },
+  "benefit.supportShort": { ar: "دعم العملاء", en: "Support" },
   "benefit.supportText": {
     ar: "فريق يساعدك في اختيار المقاس المناسب.",
     en: "A team that helps you pick the right size.",
@@ -120,6 +122,7 @@ export const coreDict = {
     en: "Cash on delivery, with online payment coming soon.",
   },
   "benefit.returns": { ar: "سياسة استرجاع واضحة", en: "Clear return policy" },
+  "benefit.returnsShort": { ar: "إرجاع واضح", en: "Easy returns" },
   "benefit.returnsText": {
     ar: "١٤ يومًا للاستبدال أو الإرجاع بشروط بسيطة.",
     en: "14 days to exchange or return with simple terms.",

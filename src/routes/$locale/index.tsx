@@ -186,12 +186,6 @@ function HeroSlider({ slides }: { slides: HeroSlide[] }) {
                     {buttonText}
                     <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
                   </Link>
-                  <Link
-                    to={href("/collections/mattresses")}
-                    className="inline-flex items-center justify-center rounded-full border border-white/70 bg-white/5 px-8 py-3.5 font-bold text-white backdrop-blur-sm transition-colors duration-300 hover:bg-white hover:text-[#1c1b1b]"
-                  >
-                    {t("hero.ctaSecondary")}
-                  </Link>
                 </div>
               </div>
             </div>
@@ -223,22 +217,40 @@ function HeroSlider({ slides }: { slides: HeroSlide[] }) {
 function TrustBar() {
   const t = useT();
   const items = [
-    { icon: Truck, label: t("product.trustFastShipping") },
-    { icon: ShieldCheck, label: t("announce.warranty") },
-    { icon: Headset, label: t("benefit.support") },
-    { icon: RotateCcw, label: t("benefit.returns") },
+    {
+      icon: Truck,
+      label: t("product.trustFastShipping"),
+      short: t("product.trustFastShippingShort"),
+    },
+    {
+      icon: ShieldCheck,
+      label: t("announce.warranty"),
+      short: t("announce.warrantyShort"),
+    },
+    { icon: Headset, label: t("benefit.support"), short: t("benefit.supportShort") },
+    { icon: RotateCcw, label: t("benefit.returns"), short: t("benefit.returnsShort") },
   ];
   return (
     <section className="border-b border-gray-100 bg-white">
-      <div className="mx-auto grid max-w-[1280px] grid-cols-2 gap-x-4 gap-y-6 px-5 py-8 md:grid-cols-4 md:px-[64px] md:py-10">
-        {items.map(({ icon: Icon, label }, i) => (
-          <div key={i} className="flex items-center gap-3 justify-center md:justify-start">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#fbeceb] text-[#b90015]">
-              <Icon className="h-5 w-5" strokeWidth={1.75} />
-            </span>
-            <span className="text-sm font-bold leading-snug text-[#1c1b1b]">{label}</span>
+      <div className="mx-auto max-w-[1280px] px-5 md:px-[64px]">
+        <Reveal>
+          <div className="grid grid-cols-2 gap-px bg-gray-100 md:grid-cols-4">
+            {items.map(({ icon: Icon, label, short }, i) => (
+              <div
+                key={i}
+                className="group flex items-center justify-center gap-2.5 bg-white px-2 py-4 md:gap-3 md:py-6"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#fbeceb] text-[#b90015] transition-transform duration-300 ease-out group-hover:scale-110 md:h-11 md:w-11">
+                  <Icon className="h-4 w-4 md:h-5 md:w-5" strokeWidth={1.75} />
+                </span>
+                <span className="text-center text-xs font-bold leading-tight text-[#1c1b1b] transition-colors duration-300 group-hover:text-[#b90015] md:text-sm">
+                  <span className="md:hidden">{short}</span>
+                  <span className="hidden md:inline">{label}</span>
+                </span>
+              </div>
+            ))}
           </div>
-        ))}
+        </Reveal>
       </div>
     </section>
   );

@@ -53,6 +53,7 @@ export const productDict = {
   "product.warranty10Alt": { ar: "ضمان 10 سنوات", en: "10-year warranty" },
   "product.freeShippingAlt": { ar: "شحن مجاني", en: "Free shipping" },
   "product.trustFastShipping": { ar: "شحن سريع خلال 3-5 أيام", en: "Fast shipping in 3–5 days" },
+  "product.trustFastShippingShort": { ar: "شحن سريع", en: "Fast shipping" },
   "product.trustSecurePayment": { ar: "دفع آمن 100%", en: "100% secure payment" },
   "product.trustReturns": {
     ar: "استرجاع مجاني خلال 14 يوم",
