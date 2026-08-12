@@ -766,3 +766,42 @@
 .shg-img--ready {
   opacity: 1;
 }
+
+/* =============================================================
+   SCROLL REVEAL + UTILITIES (homepage)
+   Pure CSS transitions driven by an IntersectionObserver
+   (see <Reveal />). Neutralised by the global reduced-motion
+   rule — reduced-motion users get static, fully-visible content.
+   ============================================================= */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 720ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 720ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.reveal--in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Safety net: if motion is reduced, never leave content hidden even
+   before the observer fires. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Hide scrollbars on touch carousels without disabling scrolling. */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
