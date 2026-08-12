@@ -283,6 +283,9 @@ export const coreDict = {
   "form.submit": { ar: "إرسال", en: "Submit" },
   "form.sending": { ar: "جارٍ الإرسال...", en: "Sending…" },
 
+  // loader
+  "loader.subtitle": { ar: "نحضّر تجربتك...", en: "Preparing your experience…" },
+
   // generic
   "common.currency": { ar: "ج.م", en: "EGP" },
   "common.loading": { ar: "جارٍ التحميل...", en: "Loading…" },
