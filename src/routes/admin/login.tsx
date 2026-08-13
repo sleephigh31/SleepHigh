@@ -84,7 +84,7 @@ function AdminLoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="sleephigh31@gmail.com"
+                  placeholder="Only Admin"
                   className="w-full rounded-xl border border-input bg-background pr-10 pl-4 py-2.5 text-xs text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:ring-2 focus:ring-ring dir-ltr"
                 />
               </div>

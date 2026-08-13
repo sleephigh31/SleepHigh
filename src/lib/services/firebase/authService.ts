@@ -271,7 +271,27 @@ export async function getUserDoc(uid: string) {
 
 /** Get the role for a given UID from Firestore. */
 export async function getUserRole(uid: string): Promise<UserRole> {
+  // First check adminRoles collection (authoritative source for admin role)
+  try {
+    const adminRoleDoc = await getDoc(doc(db, "adminRoles", uid));
+    console.log('[authService] getUserRole - checking adminRoles for uid:', uid);
+    console.log('[authService] getUserRole - adminRoleDoc.exists():', adminRoleDoc.exists());
+
+    if (adminRoleDoc.exists()) {
+      const data = adminRoleDoc.data();
+      console.log('[authService] getUserRole - adminRoles data:', data);
+      if (data.role === "admin") {
+        console.log('[authService] getUserRole - RETURNING ADMIN');
+        return "admin";
+      }
+    }
+  } catch (err) {
+    console.error('[authService] getUserRole - error checking adminRoles:', err);
+  }
+
+  // Fall back to users collection
   const userDoc = await getUserDoc(uid);
+  console.log('[authService] getUserRole - userDoc.role:', userDoc?.role);
   return (userDoc?.role as UserRole) ?? "customer";
 }
 
@@ -282,9 +302,15 @@ export function onAuthStateChanged(callback: (user: User | null) => void): () =>
       callback(null);
       return;
     }
+    const role = await getUserRole(fbUser.uid);
     const userDoc = await getUserDoc(fbUser.uid);
+
+    console.log('[authService] onAuthStateChanged - uid:', fbUser.uid);
+    console.log('[authService] onAuthStateChanged - role:', role);
+    console.log('[authService] onAuthStateChanged - userDoc.role:', userDoc?.role);
+
     callback({
-      ...firebaseUserToUser(fbUser, userDoc?.role),
+      ...firebaseUserToUser(fbUser, role),
       phone: userDoc?.phone,
       defaultAddress: userDoc?.defaultAddress,
     });

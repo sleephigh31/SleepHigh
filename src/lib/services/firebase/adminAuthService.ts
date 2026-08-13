@@ -60,19 +60,15 @@ export async function signInAdmin(
   }
 }
 
-const adminRoleCache = new Map<string, { isAdmin: boolean; timestamp: number }>();
+export const adminRoleCache = new Map<string, { isAdmin: boolean; timestamp: number }>();
 const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes cache
 
 /**
- * Synchronously check if a user is an admin based on email or active cache.
+ * Synchronously check if a user is an admin based on active cache.
  * Returns true/false immediately without async database calls.
  */
 export function isCurrentUserAdminSync(user: FirebaseUser | null = auth.currentUser): boolean {
   if (!user) return false;
-  if (user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-    adminRoleCache.set(user.uid, { isAdmin: true, timestamp: Date.now() });
-    return true;
-  }
   const cached = adminRoleCache.get(user.uid);
   if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
     return cached.isAdmin;

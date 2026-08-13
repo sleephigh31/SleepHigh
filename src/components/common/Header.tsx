@@ -32,6 +32,13 @@ export function Header() {
   const otherLocale = isRTL ? "en" : "ar";
   const [currentPath, setCurrentPath] = useState(`/${locale}`);
 
+  // Debug: Log user state
+  useEffect(() => {
+    console.log('[Header] User state:', user);
+    console.log('[Header] User role:', user?.role);
+    console.log('[Header] Is admin check:', user && user.role === "admin");
+  }, [user]);
+
   useEffect(() => {
     setMounted(true);
     setCurrentPath(window.location.pathname);
@@ -185,7 +192,7 @@ export function Header() {
             </Link>
 
             {/* Admin (Mobile) */}
-            {user && (user.role === "admin" || user.email === "sleephigh31@gmail.com") && (
+            {user && user.role === "admin" && (
               <Link
                 to="/admin"
                 onClick={() => setMobileMenuOpen(false)}
@@ -365,7 +372,7 @@ export function Header() {
           </Link>
 
           {/* Admin — desktop + tablet */}
-          {user && (user.role === "admin" || user.email === "sleephigh31@gmail.com") && (
+          {user && user.role === "admin" && (
             <Link
               to="/admin"
               preload="intent"

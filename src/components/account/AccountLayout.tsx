@@ -122,7 +122,7 @@ export function AccountLayout({ children, activeTab }: AccountLayoutProps) {
           </div>
 
           {/* Admin Button */}
-          {(user.role === "admin" || user.email === "sleephigh31@gmail.com") && (
+          {user.role === "admin" && (
             <div className="rounded-3xl border border-brand/20 bg-brand/5 p-5 shadow-sm">
               <div className="flex flex-col items-center text-center space-y-3">
                 <div className="h-12 w-12 rounded-full bg-brand/10 flex items-center justify-center">

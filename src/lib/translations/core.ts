@@ -44,7 +44,7 @@ export const coreDict = {
   "nav.navigation": { ar: "التنقل", en: "Navigation" },
   "nav.accountSection": { ar: "الحساب", en: "Account" },
   "nav.signIn": { ar: "تسجيل الدخول", en: "Sign in" },
-  "nav.adminDashboard": { ar: "لوحة الإدارة", en: "Admin dashboard" },
+  "nav.adminDashboard": { ar: "لوحة التحكم", en: "Admin Dashboard" },
   "nav.otherLanguage": { ar: "English", en: "العربية" },
   "nav.switchLanguage": { ar: "Switch to English", en: "التحويل للعربية" },
 
@@ -329,4 +329,132 @@ export const coreDict = {
   "common.viewDetails": { ar: "عرض التفاصيل", en: "View details" },
   "common.viewAll": { ar: "عرض الكل", en: "View all" },
   "common.note": { ar: "ملاحظة", en: "Note" },
+
+  // account page
+  "account.title": { ar: "حسابي", en: "My account" },
+  "account.dashboard": { ar: "لوحة البيانات", en: "Dashboard" },
+  "account.orders": { ar: "الطلبات", en: "Orders" },
+  "account.addresses": { ar: "العناوين", en: "Addresses" },
+  "account.settings": { ar: "الإعدادات", en: "Settings" },
+  "account.logout": { ar: "تسجيل الخروج", en: "Logout" },
+  "account.adminPanel": { ar: "لوحة التحكم", en: "Admin Dashboard" },
+  "account.adminPanelText": {
+    ar: "الوصول الكامل إلى لوحة إدارة المتجر",
+    en: "Full access to store management dashboard",
+  },
+  "account.adminPanelCta": { ar: "لوحة التحكم", en: "Admin Dashboard" },
+
+  // admin customer management
+  "admin.customers.title": { ar: "قائمة العملاء", en: "Customers" },
+  "admin.customers.subtitle": {
+    ar: "عرض وحساب بيانات العملاء ومتابعة إجمالي المشتريات",
+    en: "View and manage customer data and track purchase totals",
+  },
+  "admin.customers.loading": { ar: "جاري تحميل العملاء...", en: "Loading customers…" },
+  "admin.customers.empty": { ar: "لا يوجد عملاء مسجلون حالياً", en: "No registered customers" },
+  "admin.customers.emptyHint": {
+    ar: "سيتم إدراج بيانات العملاء فور تسجيلهم أو إنشائهم حسابتهم في المتجر.",
+    en: "Customers will appear here once they register or create an account.",
+  },
+  "admin.customers.searchPlaceholder": {
+    ar: "بحث باسم العميل، البريد، أو الهاتف...",
+    en: "Search by name, email, or phone...",
+  },
+  "admin.customers.filterAll": { ar: "الكل", en: "All" },
+  "admin.customers.filterAdmins": { ar: "المدراء", en: "Admins" },
+  "admin.customers.filterCustomers": { ar: "العملاء", en: "Customers" },
+  "admin.customers.customer": { ar: "عميل", en: "Customer" },
+  "admin.customers.role": { ar: "الدور", en: "Role" },
+  "admin.customers.phone": { ar: "الهاتف", en: "Phone" },
+  "admin.customers.email": { ar: "البريد الإلكتروني", en: "Email" },
+  "admin.customers.ordersCount": { ar: "عدد الطلبات", en: "Orders" },
+  "admin.customers.totalSpent": { ar: "إجمالي الإنفاق", en: "Total spent" },
+  "admin.customers.registeredAt": { ar: "تاريخ التسجيل", en: "Registered" },
+  "admin.customers.actions": { ar: "الإجراءات", en: "Actions" },
+  "admin.customers.viewProfile": { ar: "الملف", en: "Profile" },
+
+  // role badges
+  "admin.role.admin": { ar: "مدير", en: "Admin" },
+  "admin.role.customer": { ar: "عميل", en: "Customer" },
+
+  // role management actions
+  "admin.role.makeAdmin": { ar: "ترقية إلى مدير", en: "Make admin" },
+  "admin.role.removeAdmin": { ar: "إزالة صلاحية المدير", en: "Remove admin" },
+  "admin.role.changing": { ar: "جاري تحديث الصلاحية...", en: "Updating role..." },
+
+  // confirmations
+  "admin.role.confirmPromote": { ar: "تأكيد الترقية", en: "Confirm promotion" },
+  "admin.role.confirmPromoteTitle": {
+    ar: "ترقية العميل إلى مدير",
+    en: "Promote customer to admin",
+  },
+  "admin.role.confirmPromoteMessage": {
+    ar: "سيحصل هذا المستخدم على صلاحيات المدير الكاملة، بما في ذلك الوصول إلى لوحة التحكم وإدارة المنتجات والطلبات والعملاء.",
+    en: "This user will gain full administrator access, including dashboard access and the ability to manage products, orders, and customers.",
+  },
+  "admin.role.confirmDemote": { ar: "تأكيد إزالة الصلاحية", en: "Confirm removal" },
+  "admin.role.confirmDemoteTitle": {
+    ar: "إزالة صلاحية المدير",
+    en: "Remove administrator access",
+  },
+  "admin.role.confirmDemoteMessage": {
+    ar: "سيتم إزالة صلاحيات المدير من هذا المستخدم. لن يتمكن بعد ذلك من الوصول إلى لوحة التحكم أو إدارة المتجر.",
+    en: "This user will lose administrator access. They will no longer be able to access the dashboard or manage the store.",
+  },
+  "admin.role.confirmButton": { ar: "تأكيد", en: "Confirm" },
+  "admin.role.cancelButton": { ar: "إلغاء", en: "Cancel" },
+
+  // success messages
+  "admin.role.promoteSuccess": {
+    ar: "تم ترقية المستخدم إلى مدير بنجاح",
+    en: "User promoted to admin successfully",
+  },
+  "admin.role.demoteSuccess": {
+    ar: "تم إزالة صلاحية المدير بنجاح",
+    en: "Administrator access removed successfully",
+  },
+
+  // error messages
+  "admin.role.errorGeneric": {
+    ar: "حدث خطأ أثناء تحديث الصلاحية. يرجى المحاولة مرة أخرى.",
+    en: "Failed to update role. Please try again.",
+  },
+  "admin.role.errorNotAuthorized": {
+    ar: "ليس لديك صلاحية تنفيذ هذا الإجراء.",
+    en: "You are not authorized to perform this action.",
+  },
+  "admin.role.errorSelfDemote": {
+    ar: "لا يمكنك إزالة صلاحية المدير من نفسك.",
+    en: "You cannot remove your own administrator access.",
+  },
+  "admin.role.errorLastAdmin": {
+    ar: "لا يمكن إزالة آخر مدير في النظام.",
+    en: "Cannot remove the last administrator.",
+  },
+  "admin.role.errorUserNotFound": {
+    ar: "المستخدم غير موجود.",
+    en: "User not found.",
+  },
+
+  // customer detail
+  "admin.customerDetail.title": { ar: "ملف العميل", en: "Customer profile" },
+  "admin.customerDetail.personalInfo": { ar: "البيانات الشخصية", en: "Personal information" },
+  "admin.customerDetail.customerOrders": { ar: "طلبات العميل", en: "Customer orders" },
+  "admin.customerDetail.noOrders": {
+    ar: "لا توجد طلبات سابقة لهذا العميل.",
+    en: "No previous orders for this customer.",
+  },
+  "admin.customerDetail.notFound": {
+    ar: "العميل المطلوب غير موجود أو لم يتم العثور على حسابه.",
+    en: "Customer not found or account does not exist.",
+  },
+  "admin.customerDetail.name": { ar: "الاسم", en: "Name" },
+  "admin.customerDetail.role": { ar: "الدور", en: "Role" },
+  "admin.customerDetail.security": { ar: "الحماية والأمان", en: "Security" },
+  "admin.customerDetail.securityNote": {
+    ar: "•••••••• (محمية ومُشفرة عبر Firebase Auth)",
+    en: "•••••••• (Protected and encrypted via Firebase Auth)",
+  },
+  "admin.customerDetail.grantedAt": { ar: "تاريخ المنح", en: "Granted at" },
+  "admin.customerDetail.grantedBy": { ar: "منح بواسطة", en: "Granted by" },
 } as const;

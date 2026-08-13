@@ -47,7 +47,7 @@ export function AdminGuard({ children }: AdminGuardProps) {
     });
 
     return () => unsub();
-  }, [navigate, isAlreadyAdmin]);
+  }, [navigate]);
 
   if (loading) {
     return (
