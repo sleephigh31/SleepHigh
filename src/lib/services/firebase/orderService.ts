@@ -195,23 +195,37 @@ export async function updateOrderStatus(
   note?: string,
 ): Promise<{ ok: boolean; error?: string }> {
   try {
-    const historyEntry: OrderStatusHistoryEntry = {
+    // Build history entry without undefined values
+    const historyEntry: Partial<OrderStatusHistoryEntry> = {
       status: newStatus,
       timestamp: new Date().toISOString(),
       adminId,
-      note,
     };
+    if (note) {
+      historyEntry.note = note;
+    }
+
+    console.log("[orderService] updateOrderStatus - payload:", {
+      orderId,
+      newStatus,
+      adminId,
+      note,
+      historyEntry,
+    });
 
     const orderSnap = await getDoc(doc(db, ORDERS_COL, orderId));
     if (!orderSnap.exists()) return { ok: false, error: "not_found" };
     const existing = orderSnap.data() as any;
     const history = (existing.statusHistory as OrderStatusHistoryEntry[]) ?? [];
 
-    await updateDoc(doc(db, ORDERS_COL, orderId), {
+    const updateData = {
       status: newStatus,
       statusHistory: [...history, historyEntry],
       updatedAt: serverTimestamp(),
-    });
+    };
+    console.log("[orderService] updateOrderStatus - updateData:", updateData);
+
+    await updateDoc(doc(db, ORDERS_COL, orderId), updateData);
     return { ok: true };
   } catch (err) {
     console.error("[orderService] updateOrderStatus error:", err);
