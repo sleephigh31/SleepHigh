@@ -216,11 +216,24 @@ export async function updateOrderStatus(
     const orderSnap = await getDoc(doc(db, ORDERS_COL, orderId));
     if (!orderSnap.exists()) return { ok: false, error: "not_found" };
     const existing = orderSnap.data() as any;
-    const history = (existing.statusHistory as OrderStatusHistoryEntry[]) ?? [];
+    const existingHistory = (existing.statusHistory as OrderStatusHistoryEntry[]) ?? [];
+
+    // Clean existing history entries by removing undefined values
+    const cleanedHistory = existingHistory.map((entry) => {
+      const cleaned: Partial<OrderStatusHistoryEntry> = {
+        status: entry.status,
+        timestamp: entry.timestamp,
+        adminId: entry.adminId,
+      };
+      if (entry.note !== undefined) {
+        cleaned.note = entry.note;
+      }
+      return cleaned;
+    });
 
     const updateData = {
       status: newStatus,
-      statusHistory: [...history, historyEntry],
+      statusHistory: [...cleanedHistory, historyEntry],
       updatedAt: serverTimestamp(),
     };
     console.log("[orderService] updateOrderStatus - updateData:", updateData);
