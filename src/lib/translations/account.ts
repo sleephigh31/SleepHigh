@@ -103,7 +103,7 @@ export const accountDict = {
     en: "Something went wrong while saving. Please try again.",
   },
   "settings.fullName": { ar: "الاسم الكامل", en: "Full name" },
-  "settings.fullNamePlaceholder": { ar: "أحمد محمد علي", en: "e.g. John Smith" },
+  "settings.fullNamePlaceholder": { ar: "أحمد محمد علي", en: "Akim" },
   "settings.phone": { ar: "رقم الهاتف", en: "Phone number" },
   "settings.email": { ar: "البريد الإلكتروني", en: "Email address" },
   "settings.emailLocked": {

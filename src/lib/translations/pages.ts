@@ -63,7 +63,7 @@ export const pagesDict = {
   "contact.facebook": { ar: "فيسبوك", en: "Facebook" },
   "contact.formTitle": { ar: "أرسل لنا رسالة مباشرة", en: "Send us a message" },
   "contact.formName": { ar: "الاسم بالكامل", en: "Full name" },
-  "contact.formNamePlaceholder": { ar: "مثال: أحمد محمود", en: "e.g. John Smith" },
+  "contact.formNamePlaceholder": { ar: "مثال: نور النورج", en: "Akim" },
   "contact.formPhone": { ar: "رقم الهاتف", en: "Phone number" },
   "contact.formEmail": { ar: "البريد الإلكتروني (اختياري)", en: "Email address (optional)" },
   "contact.formSubject": { ar: "موضوع الرسالة (اختياري)", en: "Subject (optional)" },
